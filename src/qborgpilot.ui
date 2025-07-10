@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>qBorgPilot</class>
+ <widget class="QMainWindow" name="qBorgPilot">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>qBorgPilot</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qBorgPilot.qrc">
+    <normaloff>:/images/borgpilot_16x16.png</normaloff>:/images/borgpilot_16x16.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+      <widget class="QDockWidget" name="modules_dockWidget">
+       <property name="maximumSize">
+        <size>
+         <width>256</width>
+         <height>524287</height>
+        </size>
+       </property>
+       <widget class="QWidget" name="dockWidgetContents">
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="0" column="0">
+          <widget class="modules_listview_p" name="modules_listView"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QMdiArea" name="main_mdiArea"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Main_Actions">
+    <property name="title">
+     <string>&amp;Actions</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Main_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+   </widget>
+   <addaction name="menu_Main_Actions"/>
+   <addaction name="menu_Tools"/>
+   <addaction name="menu_Main_Help"/>
+  </widget>
+  <widget class="QStatusBar" name="main_statusbar"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>modules_listview_p</class>
+   <extends>QListView</extends>
+   <header location="global">modules_listview_p.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="qBorgPilot.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>modules_listView</sender>
+   <signal>doubleClicked(QModelIndex)</signal>
+   <receiver>qBorgPilot</receiver>
+   <slot>modules_listView_doubleClicked(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>56</x>
+     <y>610</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>modules_listView_doubleClicked(QModelIndex)</slot>
+ </slots>
+</ui>

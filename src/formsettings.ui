@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormSettings</class>
+ <widget class="QWidget" name="FormSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>972</width>
+    <height>606</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qBorgPilot.qrc">
+    <normaloff>:/images/borgpilot_16x16.png</normaloff>:/images/borgpilot_16x16.png</iconset>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QTabWidget" name="tabWidget_Settings">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab_DirAndFiles">
+      <attribute name="title">
+       <string>Tab 1</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+         <widget class="TableView_DirAndFiles_P" name="tableView_DirAndFiles">
+          <property name="textElideMode">
+           <enum>Qt::TextElideMode::ElideLeft</enum>
+          </property>
+         </widget>
+         <widget class="QTextBrowser" name="textBrowser_Help"/>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_General">
+      <attribute name="title">
+       <string>Tab 2</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="TableView_General_P" name="tableView_General">
+         <property name="textElideMode">
+          <enum>Qt::TextElideMode::ElideLeft</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QTextBrowser" name="textBrowser_Help_General"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_Answereres">
+      <attribute name="title">
+       <string>Page</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0">
+        <widget class="TableView_AutoAnswerers_P" name="tableView_AutoAnswerers">
+         <property name="textElideMode">
+          <enum>Qt::TextElideMode::ElideLeft</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QTextBrowser" name="textBrowser_Help_AutoAnswerers"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QFrame" name="frame_ToolBar">
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TableView_DirAndFiles_P</class>
+   <extends>QTableView</extends>
+   <header location="global">tableview_dirandfiles_p.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TableView_General_P</class>
+   <extends>QTableView</extends>
+   <header location="global">tableview_general_p.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TableView_AutoAnswerers_P</class>
+   <extends>QTableView</extends>
+   <header location="global">tableview_autoanswerers_p.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="qBorgPilot.qrc"/>
+ </resources>
+ <connections/>
+</ui>

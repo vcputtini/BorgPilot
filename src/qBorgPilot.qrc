@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/generic.png</file>
+        <file>images/borgpilot_16x16.png</file>
+        <file>images/borgpilot_32x32.png</file>
+        <file>images/borgpilot_64x64.png</file>
+        <file>images/borgpilot_logo.png</file>
+        <file>images/borg_icon_1.png</file>
+        <file>images/borg_icon_2.png</file>
+        <file>images/borg_icon_3.png</file>
+        <file>images/borg_icon_4.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>Fonts/COUR.TTF</file>
+    </qresource>
+</RCC>
