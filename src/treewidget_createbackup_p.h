@@ -125,12 +125,24 @@ public:
       case GlobalOptions::Optionals_e::Sparse:
       case GlobalOptions::Optionals_e::FilesCache:
       case GlobalOptions::Optionals_e::ReadSpecial:
-      case GlobalOptions::Optionals_e::Comment:
+      case GlobalOptions::Optionals_e::Comment: {
+        setToolTip("Enter a description for this backup.<br>Max.: 50 "
+                   "bytes.<br>Valid chars: a-zA-Z0-9_<br>e.g.: backup_home");
+        setMaxLength(50);
+        QRegularExpression regExp_(R"(^[a-zA-Z0-9_]+$)");
+        setValidator(new QRegularExpressionValidator(regExp_, this));
+        break;
+      }
       case GlobalOptions::Optionals_e::Timestamp:
       case GlobalOptions::Optionals_e::CheckpointInterval:
       case GlobalOptions::Optionals_e::ChunkerParams:
-      case GlobalOptions::Optionals_e::Compression:
-        break;
+      case GlobalOptions::Optionals_e::Compression: {
+        setToolTip("Basics: [auto,] <b>lz4 (default)</b><br>lzma,N "
+                   "(N=0..9)<br>lib,N (N=0..9)");
+        setMaxLength(15);
+        QRegularExpression regExp_(R"(^[a-z0-9,]+$)");
+        setValidator(new QRegularExpressionValidator(regExp_, this));
+      } break;
     }
   }
 };
