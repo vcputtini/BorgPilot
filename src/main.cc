@@ -44,7 +44,7 @@
 
 #include "createdefaultborgconffile.h"
 
-// #define ___ROOT_MODE___
+#define ___ROOT_MODE___
 
 /*!
  * \brief main

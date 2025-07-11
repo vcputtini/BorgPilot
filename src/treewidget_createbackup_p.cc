@@ -423,6 +423,19 @@ treeWidget_CreateBackup_P::populate()
               setItemWidget(levelItem2_, 4, exclude_from_);
               break;
             }
+            case GlobalOptions::Optionals_e::Comment: {
+              OptionalsLineEdit* comment_ =
+                new OptionalsLineEdit(optionalBeginIt_->first, this);
+              setItemWidget(levelItem2_, 4, comment_);
+              break;
+            }
+            case GlobalOptions::Optionals_e::Compression: {
+              OptionalsLineEdit* compression_ =
+                new OptionalsLineEdit(optionalBeginIt_->first, this);
+              setItemWidget(levelItem2_, 4, compression_);
+              break;
+            }
+
             default: {
               break;
             }
