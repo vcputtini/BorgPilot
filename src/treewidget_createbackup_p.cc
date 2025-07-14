@@ -102,10 +102,10 @@ treeWidget_CreateBackup_P::getScriptNames()
  * \brief treeWidget_CreateBackup_P::getCheckedItems
  * \return
  */
-treeWidget_CreateBackup_P::DATA_MAP_
+AppTypes::RepoistoryCreateDataMap
 treeWidget_CreateBackup_P::getCheckedItems()
 {
-  DATA_MAP_ data_m_{};
+  AppTypes::RepoistoryCreateDataMap data_m_{};
 
   for (int iTopLevelItem_ = 0; iTopLevelItem_ < this->topLevelItemCount();
        ++iTopLevelItem_) {
@@ -179,7 +179,8 @@ treeWidget_CreateBackup_P::getCheckedItems()
  * \brief treeWidget_CreateBackup_P::reloadCreateBackupSettings
  */
 void
-treeWidget_CreateBackup_P::reloadCreateBackupSettings(const DATA_MAP_& dm_)
+treeWidget_CreateBackup_P::reloadCreateBackupSettings(
+  const AppTypes::RepoistoryCreateDataMap& dm_)
 {
 
   // -----------------------------------------------------------------------
@@ -447,5 +448,18 @@ treeWidget_CreateBackup_P::populate()
         optionalBeginIt_++;
       }
     } // reponames
+  }
+}
+
+/*!
+ * \brief treeWidget_CreateBackup_P::clearTree
+ */
+void
+treeWidget_CreateBackup_P::clearTree()
+{
+  if (rootItem_) {
+    clear();
+    // Reset the rootItem_ pointer (without deleting directly)
+    rootItem_ = nullptr;
   }
 }

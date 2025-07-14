@@ -51,6 +51,7 @@
 #include <QWidget>
 
 #include "global_options.h"
+#include "types_global.h"
 
 /*!
  * \brief The OptionalsLineEdit class
@@ -160,10 +161,11 @@ public:
 
   void setScriptName(const QString&& name_) noexcept;
 
-  using DATA_MAP_ = QMultiHash<QString, QPair<QStringList, QStringList>>;
-  DATA_MAP_ getCheckedItems();
+  // using DATA_MAP_ = QMultiHash<QString, QPair<QStringList, QStringList>>;
+  AppTypes::RepoistoryCreateDataMap getCheckedItems();
 
-  void reloadCreateBackupSettings(const DATA_MAP_& dm_);
+  void reloadCreateBackupSettings(const AppTypes::RepoistoryCreateDataMap& dm_);
+  void clearTree();
 
 private:
   QSettings settings_;
