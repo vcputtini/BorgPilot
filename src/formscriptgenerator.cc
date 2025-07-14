@@ -229,6 +229,7 @@ FormScriptGenerator::genCreateBackupReload()
   AppTypes::RepoistoryCreateDataMap undo_map_ =
     settings_.read(ui->lineEdit_ScriptCreateName->text().simplified());
 
+  ui->treeWidget_CreateBackup->clearTree(); // reset tree
   ui->treeWidget_CreateBackup->setScriptName(
     ui->lineEdit_ScriptCreateName->text().simplified());
   ui->treeWidget_CreateBackup->reloadCreateBackupSettings(undo_map_);
