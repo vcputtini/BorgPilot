@@ -56,6 +56,8 @@
 #include "progid.h"
 #include "settingshandler.h"
 
+#include "types_global.h"
+
 /*!
  * \brief FormUtilities::FormUtilities
  * \param parent
@@ -521,9 +523,10 @@ FormUtilities::configBehaviorListWidget()
   auto mountArgs_ = [this](auto& data_) -> QString {
     QString args_{};
     args_.reserve(1024);
-    for (const auto& [key, _] : data_) {
+    for (const auto& [key_, value_] : data_) {
       args_ += " ";
-      args_ += std::move(key);
+      args_ +=
+        (value_ == "" ? std::move(key_) : std::move(key_ + "=" + value_));
     }
     return args_;
   };
@@ -531,14 +534,14 @@ FormUtilities::configBehaviorListWidget()
   connect(ui->listWidget_Delete,
           &ListWidget_Delete_P::itemsSelectedChanged,
           this,
-          [this, mountArgs_](const QSet<QPair<QString, QString>>& data_) {
+          [this, mountArgs_](const AppTypes::SelectedPairs& data_) {
             ui->lineEdit_Parameters->setText(std::move(mountArgs_(data_)));
           });
 
   connect(listWidget_Prune_P,
           &ListWidget_Prune_P::itemsSelectedChanged,
           this,
-          [this, mountArgs_](const QSet<QPair<QString, QString>>& data_) {
+          [this, mountArgs_](const AppTypes::SelectedPairs& data_) {
             ui->lineEdit_Parameters->setText(std::move(mountArgs_(data_)));
           });
 }

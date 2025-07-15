@@ -84,7 +84,6 @@ private:
   QString archiveSelected_;
   QString commandSelected_;
 
-  // using DataList = QList<QPair<QString, QString>>;
   struct RepoArchiveInfo
   {
     QString destRepo;                         // A_DESTREPO VALUE'S
