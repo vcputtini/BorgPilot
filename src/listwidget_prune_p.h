@@ -50,7 +50,7 @@ private slots:
   void onCheckboxStateChanged();
 
 signals:
-  void itemsSelectedChanged(QSet<QPair<QString, QString>> selected);
+  void itemsSelectedChanged(AppTypes::SelectedPairs selected);
 };
 
 #endif // ListWidget_Prune_P_H

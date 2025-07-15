@@ -1,6 +1,7 @@
 #include "listwidget_prune_p.h"
 
 /*!
+ * \private
  * \brief ListWidget_Prune_P::Prune_m_
  */
 using Opt = ListWidget_Prune_P::PruneOptions;
@@ -39,6 +40,7 @@ ListWidget_Prune_P::ListWidget_Prune_P(QWidget* parent)
 }
 
 /*!
+ * \private
  * \brief ListWidget_Prune_P::getSelectedPairs
  * \return
  */
@@ -64,21 +66,20 @@ ListWidget_Prune_P::getSelectedPairs() const
 }
 
 /*!
+ * \public
  * \brief ListWidget_Prune_P::unCheckAllOptions
  */
 void
 ListWidget_Prune_P::unCheckAllOptions()
 {
-  // Itera sobre todos os itens no QListWidget
   for (auto& item : findItems("", Qt::MatchContains)) {
-    // Recupera o widget associado ao item (o container)
+    // Retrieve the widget associated with the item (the container)
     QWidget* container = itemWidget(item);
 
-    // Procura o QCheckBox e QLineEdit no container
     QCheckBox* checkBox = container->findChild<QCheckBox*>();
     QLineEdit* lineEdit = container->findChild<QLineEdit*>();
 
-    // Se o QCheckBox e QLineEdit existirem, desmarque o QCheckBox e limpe o
+    // If both QCheckBox and QLineEdit exist, uncheck QCheckBox and clear
     // QLineEdit
     if (checkBox) {
       checkBox->setChecked(false);
@@ -90,6 +91,7 @@ ListWidget_Prune_P::unCheckAllOptions()
 }
 
 /*!
+ * \private slot
  * \brief ListWidget_Prune_P::onCheckboxStateChanged
  */
 void
@@ -99,6 +101,7 @@ ListWidget_Prune_P::onCheckboxStateChanged()
 }
 
 /*!
+ * \public
  * \brief ListWidget_Prune_P::populate
  */
 void
