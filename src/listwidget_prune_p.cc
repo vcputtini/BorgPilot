@@ -50,15 +50,15 @@ ListWidget_Prune_P::getSelectedPairs() const
   AppTypes::SelectedPairs result_;
 
   for (int i = 0; i < count(); ++i) {
-    QWidget* container = itemWidget(item(i));
-    if (!container)
+    QWidget* container_ = itemWidget(item(i));
+    if (!container_)
       continue;
 
-    auto* checkBox = container->findChild<QCheckBox*>();
-    auto* lineEdit = container->findChild<QLineEdit*>();
+    auto* checkBox_ = container_->findChild<QCheckBox*>();
+    auto* lineEdit_ = container_->findChild<QLineEdit*>();
 
-    if (checkBox && lineEdit && checkBox->isChecked()) {
-      result_.insert(qMakePair(checkBox->text(), lineEdit->text()));
+    if (checkBox_ && lineEdit_ && checkBox_->isChecked()) {
+      result_.insert(qMakePair(checkBox_->text(), lineEdit_->text()));
     }
   }
 
@@ -72,20 +72,20 @@ ListWidget_Prune_P::getSelectedPairs() const
 void
 ListWidget_Prune_P::unCheckAllOptions()
 {
-  for (auto& item : findItems("", Qt::MatchContains)) {
+  for (auto& item_ : findItems("", Qt::MatchContains)) {
     // Retrieve the widget associated with the item (the container)
-    QWidget* container = itemWidget(item);
+    QWidget* container_ = itemWidget(item_);
 
-    QCheckBox* checkBox = container->findChild<QCheckBox*>();
-    QLineEdit* lineEdit = container->findChild<QLineEdit*>();
+    QCheckBox* checkBox_ = container_->findChild<QCheckBox*>();
+    QLineEdit* lineEdit_ = container_->findChild<QLineEdit*>();
 
     // If both QCheckBox and QLineEdit exist, uncheck QCheckBox and clear
     // QLineEdit
-    if (checkBox) {
-      checkBox->setChecked(false);
+    if (checkBox_) {
+      checkBox_->setChecked(false);
     }
-    if (lineEdit) {
-      lineEdit->setText("0");
+    if (lineEdit_) {
+      lineEdit_->setText("0");
     }
   }
 }
@@ -109,33 +109,38 @@ ListWidget_Prune_P::populate()
 {
   clear();
 
-  for (const auto& [key, value] : Prune_m_) {
-    const QString checkboxText = QString::fromStdString(value.first);
-    const QString defaultValue = "0";
+  // [_,value_], key isn't used
+  for (const auto& [_, value_] : Prune_m_) {
+    const QString checkboxText_ = QString::fromStdString(value_.first);
+    const QString defaultValue_ = "0";
 
-    auto* item = new QListWidgetItem(this);
-    item->setSizeHint(QSize(300, 30));
+    auto* item_ = new QListWidgetItem(this);
+    item_->setSizeHint(QSize(300, 30));
 
-    auto* container = new QWidget(this);
-    auto* layout = new QHBoxLayout(container);
-    layout->setContentsMargins(5, 0, 5, 0);
+    auto* container_ = new QWidget(this);
+    auto* layout_ = new QHBoxLayout(container_);
+    layout_->setContentsMargins(5, 0, 5, 0);
 
-    auto* checkBox = new QCheckBox(checkboxText, container);
-    auto* lineEdit = new QLineEdit(defaultValue, container);
-    if (checkboxText.contains("--keep")) {
-      lineEdit->setInputMask("999");
+    auto* checkBox_ = new QCheckBox(checkboxText_, container_);
+    auto* lineEdit_ = new QLineEdit(defaultValue_, container_);
+    if (checkboxText_.contains("--keep")) {
+      if (checkboxText_ == Prune_m_.at(PruneOptions::KeepWithin).first) {
+        lineEdit_->setInputMask("NNN");
+      } else {
+        lineEdit_->setInputMask("999");
+      }
     } else {
-      lineEdit->setVisible(false);
-      lineEdit->setText("");
+      lineEdit_->setVisible(false);
+      lineEdit_->setText("");
     }
 
-    layout->addWidget(checkBox);
-    layout->addWidget(lineEdit);
-    container->setLayout(layout);
+    layout_->addWidget(checkBox_);
+    layout_->addWidget(lineEdit_);
+    container_->setLayout(layout_);
 
-    setItemWidget(item, container);
+    setItemWidget(item_, container_);
 
-    connect(checkBox,
+    connect(checkBox_,
             &QCheckBox::checkStateChanged,
             this,
             &ListWidget_Prune_P::onCheckboxStateChanged);
