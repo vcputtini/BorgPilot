@@ -49,6 +49,7 @@ To generate source code documentation, access the src directory and run the doxy
 #### Utilities
 ![](src/doc/screenshots/util_info.png)
 ![](src/doc/screenshots/util_list.png)
+![](src/doc/screenshots/util_diff.png)
 
 #### Settings
 ![](src/doc/screenshots/settings1.png)
