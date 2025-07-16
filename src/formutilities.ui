@@ -248,7 +248,7 @@
            <number>500</number>
           </property>
           <property name="placeholderText">
-           <string>placeholder</string>
+           <string>Archive name</string>
           </property>
           <property name="clearButtonEnabled">
            <bool>true</bool>
@@ -261,7 +261,7 @@
            <number>1024</number>
           </property>
           <property name="placeholderText">
-           <string>Argument list</string>
+           <string/>
           </property>
           <property name="clearButtonEnabled">
            <bool>true</bool>

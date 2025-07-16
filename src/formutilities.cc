@@ -231,16 +231,6 @@ FormUtilities::execCommand()
   borgComm_ = { repoSource_.split(" ") };
   borgComm_.removeIf([](const QString& s_) { return s_.isEmpty(); });
 
-  // qDebug() << borgComm_;
-
-  /*const QString input_ = std::move(ui->lineEdit_Command->text().simplified());
-
-  if (input_.isEmpty()) {
-    QMessageBox::warning(this, tr("Warning"), tr("Pattern not provided!"));
-    ui->lineEdit_Command->setFocus();
-    return;
-  }*/
-
   static QRegularExpression re_(R"(^(.+?)\s+(--format=.*)$)");
   QRegularExpressionMatch match_ = re_.match(std::move(repoSource_));
   QStringList args_{};
@@ -304,36 +294,36 @@ FormUtilities::findRepoAndArchive(
   QHash<QString, QString> archiveMap_;
   QString destRepo_;
 
-  static const QRegularExpression re_repo(R"(^B_REPONAME_(\d+)$)");
-  static const QRegularExpression re_arch(R"(^B_ARCHIVE_(\d+)$)");
-  static const QRegularExpression re_destrepo(R"(^A_DESTREPO$)");
+  static const QRegularExpression re_repo_(R"(^B_REPONAME_(\d+)$)");
+  static const QRegularExpression re_arch_(R"(^B_ARCHIVE_(\d+)$)");
+  static const QRegularExpression re_destrepo_(R"(^A_DESTREPO$)");
 
-  for (const auto& pair : dataList_) {
-    const QString& key = pair.first.trimmed();
-    const QString value = pair.second.trimmed();
+  for (const auto& pair_ : dataList_) {
+    const QString& key_ = pair_.first.trimmed();
+    const QString value_ = pair_.second.trimmed();
 
-    if (value.isEmpty()) {
+    if (value_.isEmpty()) {
       continue;
     }
 
-    if (auto match = re_repo.match(key); match.hasMatch()) {
-      const QString id = match.captured(1);
-      repoMap_[id] = value;
-    } else if (auto match = re_arch.match(key); match.hasMatch()) {
-      const QString id = match.captured(1);
-      archiveMap_[id] = value;
-    } else if (re_destrepo.match(key).hasMatch()) {
-      destRepo_ = value;
+    if (auto match_ = re_repo_.match(key_); match_.hasMatch()) {
+      const QString id_ = match_.captured(1);
+      repoMap_[id_] = value_;
+    } else if (auto match_ = re_arch_.match(key_); match_.hasMatch()) {
+      const QString id_ = match_.captured(1);
+      archiveMap_[id_] = value_;
+    } else if (re_destrepo_.match(key_).hasMatch()) {
+      destRepo_ = value_;
     }
   }
 
-  AppTypes::NamedValueList result;
-  for (QString id : repoMap_.keys()) {
-    if (archiveMap_.contains(id)) {
-      result.append(qMakePair(repoMap_[id], archiveMap_[id]));
+  AppTypes::NamedValueList result_;
+  for (QString id_ : repoMap_.keys()) {
+    if (archiveMap_.contains(id_)) {
+      result_.append(qMakePair(repoMap_[id_], archiveMap_[id_]));
     }
   }
-  return { destRepo_, result };
+  return { destRepo_, result_ };
 }
 
 /*!
@@ -352,40 +342,53 @@ FormUtilities::actionSelectedRadio(QRadioButton* button_)
           case Command::Command_EC::Delete: {
             ui->lineEdit_Parameters->clear();
             ui->lineEdit_Parameters->setFocus();
+            ui->lineEdit_Parameters->setPlaceholderText("");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           case Command::Command_EC::Prune: {
             ui->lineEdit_Parameters->clear();
             ui->lineEdit_Parameters->setFocus();
+            ui->lineEdit_Parameters->setPlaceholderText("");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           case Command::Command_EC::Info: {
+            ui->lineEdit_Parameters->setPlaceholderText(
+              "Repository or archive to display information about");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           case Command::Command_EC::Check: {
+            ui->lineEdit_Parameters->setPlaceholderText(
+              "Repository or archive to check consistency of");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           case Command::Command_EC::List: {
+            ui->lineEdit_Parameters->setPlaceholderText(
+              "Repository or archive to list contents of");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           case Command::Command_EC::Diff: {
             ui->lineEdit_Parameters->clear();
             ui->lineEdit_Parameters->setFocus();
+            ui->lineEdit_Parameters->setPlaceholderText(
+              "Name of the archive to compare");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           case Command::Command_EC::Rename: {
             ui->lineEdit_Parameters->clear();
             ui->lineEdit_Parameters->setFocus();
+            ui->lineEdit_Parameters->setPlaceholderText(
+              "The new archive name to use");
             commandSelected_ = std::move(a_.c_str());
             break;
           }
           default: {
+            ui->lineEdit_Parameters->setPlaceholderText("");
             commandSelected_ = std::move("None");
           }
         } // end-switch
