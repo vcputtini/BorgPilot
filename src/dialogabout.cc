@@ -129,7 +129,7 @@ DialogAbout::DialogAbout(QWidget* parent)
   scene_->addItem(text_[1]);
 
   text_[2] = new QGraphicsTextItem;
-  sText_ = tr("Version: %0 %1").arg(ProgId::strVersion(), buildTimeStamp);
+  sText_ = tr("Version: %0 %1").arg(ProgId::strVersion(), QString());
   text_[2]->setTransform(tf_);
   text_[2]->setFont(fontArial10);
   text_[2]->setDefaultTextColor(Qt::black);
