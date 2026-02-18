@@ -95,11 +95,11 @@ AbstractTableModel_Settings_P::headerData(int section,
     if (orientation == Qt::Horizontal) {
       switch (section) {
         case 0: {
-          return tr("Variável");
+          return tr("Variable");
           break;
         }
         case 1: {
-          return tr("Valor");
+          return tr("Value");
           break;
         }
       }
