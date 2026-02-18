@@ -172,7 +172,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         README.md
-        ${SRC_FOLDER}/doc/README.md        
+        ${SRC_FOLDER}/doc/README.md
+        src/combobox_scriptcreatename_p.h src/combobox_scriptcreatename_p.cc
     )
 
     qt_create_translation(QM_FILES ${SRC_FOLDER}/${CMAKE_SOURCE_DIR} ${TS_FILES})
