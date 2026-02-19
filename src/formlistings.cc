@@ -39,6 +39,7 @@
 
 #include "QRadioButton"
 #include "QSettings"
+#include <QComboBox>
 #include <QFileDialog>
 #include <QFontDatabase>
 #include <QLabel>
@@ -65,8 +66,8 @@ FormListings::FormListings(QWidget* parent)
   ui->setupUi(this);
 
   ui->toolBox_SearchAndListing->setCurrentIndex(Pages::Search);
-  connect(ui->lineEdit_ScriptName,
-          &QLineEdit::textChanged,
+  connect(ui->comboBox_ListScriptsNames,
+          &QComboBox::currentTextChanged,
           this,
           [this](const QString&) {
             ui->toolBox_SearchAndListing->setCurrentIndex(Pages::Search);
@@ -105,9 +106,9 @@ FormListings::setPattern(const QString& pattern)
 void
 FormListings::listRepoNames()
 {
-  if (ui->lineEdit_ScriptName->text().simplified().isEmpty()) {
+  if (ui->comboBox_ListScriptsNames->currentText().isEmpty()) {
     QMessageBox::warning(this, tr("Warning"), tr("Script name not provided!"));
-    ui->lineEdit_ScriptName->setFocus();
+    ui->comboBox_ListScriptsNames->setFocus();
     return;
   }
 
@@ -117,7 +118,7 @@ FormListings::listRepoNames()
   QStringList repoNames_ = getScriptNames();
 
   ui->treeWidget_Repos->addRootItem(
-    ui->lineEdit_ScriptName->text().simplified());
+    ui->comboBox_ListScriptsNames->currentText());
   for (const auto& rItem_ : std::as_const(repoNames_)) {
     ui->treeWidget_Repos->addRepoItem(std::move(rItem_.section("::", 0, 0)),
                                       std::move(rItem_.section("::", 1)));
@@ -162,7 +163,7 @@ FormListings::execSearch()
 
   if (input_.isEmpty()) {
     QMessageBox::warning(this, tr("Warning"), tr("Pattern not provided!"));
-    ui->lineEdit_ScriptName->setFocus();
+    ui->comboBox_ListScriptsNames->setFocus();
     return;
   }
 
@@ -227,7 +228,8 @@ FormListings::getScriptNames()
   QSettings settings_(ProgId::strOrganization(), ProgId::strInternalName());
 
   const QString completeGroupName_ =
-    QString("INITREPO_%0").arg(std::move(ui->lineEdit_ScriptName->text()));
+    QString("INITREPO_%0")
+      .arg(std::move(ui->comboBox_ListScriptsNames->currentText()));
 
   QStringList repoNames_;
   if (settings_.childGroups().contains(completeGroupName_)) {
