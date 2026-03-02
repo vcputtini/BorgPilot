@@ -78,7 +78,7 @@ FormScriptGenerator::FormScriptGenerator(QWidget* parent)
 #endif
 
   QRegularExpression regExp_(R"([a-z0-9_]*)"); // valid chars
-  ui->lineEdit_ScriptName->setValidator(
+  ui->comboBox_ScriptCreateName->setValidator(
     new QRegularExpressionValidator(regExp_, this));
 
   QRegularExpression regExp1_(R"([A-Za-z0-9_/@:.]*)"); // valid chars
@@ -186,7 +186,7 @@ FormScriptGenerator::setupCreateBackup()
   ui->treeWidget_CreateBackup->clear();
 
   ui->treeWidget_CreateBackup->setScriptName(
-    ui->lineEdit_ScriptCreateName->text().simplified());
+    ui->comboBox_ScriptCreateName->currentText().simplified());
   ui->treeWidget_CreateBackup->populate();
 }
 
@@ -227,11 +227,11 @@ FormScriptGenerator::genCreateBackupReload()
   SettingsHandlerCreate settings_;
 
   AppTypes::RepoistoryCreateDataMap undo_map_ =
-    settings_.read(ui->lineEdit_ScriptCreateName->text().simplified());
+    settings_.read(ui->comboBox_ScriptCreateName->currentText().simplified());
 
   ui->treeWidget_CreateBackup->clearTree(); // reset tree
   ui->treeWidget_CreateBackup->setScriptName(
-    ui->lineEdit_ScriptCreateName->text().simplified());
+    ui->comboBox_ScriptCreateName->currentText().simplified());
   ui->treeWidget_CreateBackup->reloadCreateBackupSettings(undo_map_);
 }
 
@@ -253,6 +253,15 @@ FormScriptGenerator::saveInitTable()
     const int ret_ = msgBox.exec();
     return ret_;
   };
+
+  if (ui->lineEdit_DestPath->text().endsWith('/')) {
+    QMessageBox::warning(this,
+                         tr(ProgId::Name),
+                         tr("Destination path names cannot end with /"),
+                         QMessageBox::Close);
+    ui->lineEdit_DestPath->setFocus();
+    return;
+  }
 
   if (setHandler.isScriptExists(ui->lineEdit_ScriptName->text().simplified())) {
     switch (
@@ -465,8 +474,8 @@ FormScriptGenerator::genInitScript()
   FormScriptGenerator::TestFileNames testFileNames_;
   switch (testFileNames_.test(fn_)) {
     case TestFileNames::Reasons::SaveWithNewname: {
-      shgen_ =
-        new ScriptGen(QString("%0").arg(testFileNames_.newFilename()), this);
+      bashGen_ = new BashScriptGenerator(
+        QString("%0").arg(testFileNames_.newFilename()), this);
       break;
     }
     case TestFileNames::Reasons::NameProvidedByUser: {
@@ -474,46 +483,45 @@ FormScriptGenerator::genInitScript()
       return;
     }
     case TestFileNames::Reasons::NotExists: {
-      shgen_ = new ScriptGen(fn_, this);
+      bashGen_ = new BashScriptGenerator(fn_, this);
     }
   }
-
-  connect(shgen_, SIGNAL(fileError(QString)), this, SLOT(fileError(QString)));
+  connect(bashGen_, SIGNAL(fileError(QString)), this, SLOT(fileError(QString)));
   if (ui->radioButton_Remote->isChecked()) {
-    shgen_->setRepositoryPath("ssh://" +
-                              ui->lineEdit_DestPath->text().simplified());
+    bashGen_->setRepositoryPath("ssh://" +
+                                ui->lineEdit_DestPath->text().simplified());
   } else {
-    shgen_->setRepositoryPath(ui->lineEdit_DestPath->text().simplified());
+    bashGen_->setRepositoryPath(ui->lineEdit_DestPath->text().simplified());
   }
 
   for (int i_ = 0; i_ < ui->tableWidget_RepoNames->rowCount(); ++i_) {
-    QLineEdit* name_ =
+    const QLineEdit* name_ =
       qobject_cast<QLineEdit*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::Name)));
     if (!name_) {
       break;
     }
 
-    QLineEdit* archive_ =
+    const QLineEdit* archive_ =
       qobject_cast<QLineEdit*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::Archive)));
     if (!archive_) {
       break;
     }
 
-    QComboBox* encmode_ =
+    const QComboBox* encmode_ =
       qobject_cast<QComboBox*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::EncMode)));
 
-    QCheckBox* append_ =
+    const QCheckBox* append_ =
       qobject_cast<QCheckBox*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::Append)));
 
-    QCheckBox* makedirpath_ =
+    const QCheckBox* makedirpath_ =
       qobject_cast<QCheckBox*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::MakeDirPath)));
 
-    QLineEdit* sto_quota_ =
+    const QLineEdit* sto_quota_ =
       qobject_cast<QLineEdit*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::StoQuota)));
 
@@ -525,7 +533,7 @@ FormScriptGenerator::genInitScript()
                       (makedirpath_->checkState() == Qt::Checked ? 1 : 0),
                       sto_quota_->text());
 
-    shgen_->append(i_, t_);
+    bashGen_->append(i_, t_);
   }
 
   QByteArray list(ui->treeView_CommonOptions_Init->getCheckedItems());
@@ -538,9 +546,32 @@ FormScriptGenerator::genInitScript()
                        static_cast<GlobalOptions::GlobalOptions_e>((int)*a)) +
                      " ";
   }
-
-  shgen_->sg_fnc_init_repos(coptions_str_);
+  bashGen_->setCommons(coptions_str_);
+  bashGen_->writeScript();
   Globals::setFilePermissions(fn_, 0755);
+}
+
+/*!
+ * \brief FormScriptGenerator::dialogDestinationPath
+ */
+void
+FormScriptGenerator::getDestinationPath()
+{
+  QFileDialog dlg_;
+  QString fn_ = dlg_.getExistingDirectory(this,
+                                          tr("Local Destination Path"),
+                                          QDir::homePath(),
+                                          QFileDialog::ShowDirsOnly |
+                                            QFileDialog::DontResolveSymlinks);
+  dlg_.close();
+
+  if (fn_.isEmpty()) {
+    QMessageBox::warning(
+      this, tr("Warning"), tr("The directory name cannot be left empty. "));
+    return;
+  }
+
+  ui->lineEdit_DestPath->setText(fn_.simplified());
 }
 
 /*!
@@ -553,7 +584,7 @@ FormScriptGenerator::genCreateSaveSettings()
 {
   SettingsHandlerCreate settings_;
   auto checkedItems_ = ui->treeWidget_CreateBackup->getCheckedItems();
-  if (!settings_.save(ui->lineEdit_ScriptCreateName->text().simplified(),
+  if (!settings_.save(ui->comboBox_ScriptCreateName->currentText(),
                       checkedItems_)) {
     QMessageBox::critical(this, tr("Warning"), tr("Error writing file"));
     return;
@@ -569,7 +600,7 @@ FormScriptGenerator::genCreateSaveSettings()
 void
 FormScriptGenerator::genCreateBackup()
 {
-  if (ui->lineEdit_ScriptCreateName->text().simplified().isEmpty()) {
+  if (ui->comboBox_ScriptCreateName->currentText().isEmpty()) {
     return;
   }
 
@@ -583,7 +614,7 @@ FormScriptGenerator::genCreateBackup()
     this,
     tr("Save Script As ..."),
     QString("%1_%2").arg("create",
-                         ui->lineEdit_ScriptCreateName->text().simplified()),
+                         ui->comboBox_ScriptCreateName->currentText()),
     tr("Script (*.sh)"));
   dlg_.close();
   fn_ += ".sh";
@@ -598,8 +629,8 @@ FormScriptGenerator::genCreateBackup()
   switch (testFileNames_.test(fn_)) {
     case TestFileNames::Reasons::SaveWithNewname: {
       auto checkedItems = ui->treeWidget_CreateBackup->getCheckedItems();
-      ScriptGen gen_(testFileNames_.newFilename());
-      gen_.sg_fnc_create(checkedItems);
+      BashScriptGenerator gen_(testFileNames_.newFilename(), checkedItems);
+      gen_.writeScript();
       Globals::setFilePermissions(testFileNames_.newFilename(), 0755);
       return;
     }
@@ -609,8 +640,8 @@ FormScriptGenerator::genCreateBackup()
     }
     case TestFileNames::Reasons::NotExists: {
       auto checkedItems = ui->treeWidget_CreateBackup->getCheckedItems();
-      ScriptGen gen_(fn_);
-      gen_.sg_fnc_create(checkedItems);
+      BashScriptGenerator gen_(fn_, checkedItems);
+      gen_.writeScript();
       Globals::setFilePermissions(fn_, 0755);
     }
   }
@@ -645,6 +676,7 @@ FormScriptGenerator::setupButtons()
   connect(
     ui->radioButton_Local, &QRadioButton::clicked, this, [this](bool clicked) {
       if (clicked) {
+        ui->toolButton_DestPath->setEnabled(true);
         ui->lineEdit_DestPath->setFocus();
         ui->lineEdit_DestPath->clear();
         ui->lineEdit_DestPath->setPlaceholderText(tr("/path/to/repo"));
@@ -658,6 +690,7 @@ FormScriptGenerator::setupButtons()
         ui->lineEdit_DestPath->clear();
         ui->lineEdit_DestPath->setPlaceholderText(
           tr("user@hostname[:port]/path/to/repo"));
+        ui->toolButton_DestPath->setEnabled(false);
       }
     });
 
@@ -673,6 +706,12 @@ FormScriptGenerator::setupButtons()
   connect(
     ui->toolButton_ScrSave, SIGNAL(clicked(bool)), this, SLOT(saveInitTable()));
 
+  connect(ui->toolButton_DestPath,
+          SIGNAL(clicked(bool)),
+          this,
+          SLOT(getDestinationPath()));
+
+  /* Page 2 */
   connect(ui->toolButton_CreateOpen,
           SIGNAL(clicked(bool)),
           this,

@@ -81,7 +81,7 @@ BashScriptGenerator::BashScriptGenerator(
   out_file_.setFileName(fname_);
   out_file_.setPermissions(QFileDevice::ReadUser);
   if (!out_file_.open(QIODevice::ReadWrite | QIODevice::Text)) {
-    // fError(tr("Error trying to open file for writing/recording."));
+    fileError(tr("Error trying to open file for writing/recording."));
     return;
   }
   out_ts_.setDevice(&out_file_);
