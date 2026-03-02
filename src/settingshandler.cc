@@ -372,6 +372,7 @@ SettingsHandlerCreate::save(
                       ProgId::strInternalName() + "_" + scriptName);
 
   if (settings_.isWritable()) {
+    qDebug() << __FUNCTION__ << scriptName;
     settings_.beginGroup(scriptName);
 
     int cnt_{ 0 };
