@@ -6,6 +6,9 @@ apoio/*
 bin/*
 bkp/
 src/doc/html/
+*_old
+.gitignore
+
 *.o
 *.sh
 CMakeLists.txt.user
