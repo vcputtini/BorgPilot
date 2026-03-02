@@ -124,10 +124,6 @@ set(PROJECT_SOURCES
          ${SRC_FOLDER}/treeview_commonoptions_p.cc
          ${SRC_FOLDER}/tablewidget_reponamesitemdelegate.h
          ${SRC_FOLDER}/tablewidget_reponamesitemdelegate.cc
-         ${SRC_FOLDER}/scriptgen.h
-         ${SRC_FOLDER}/scriptgen.cc
-         ${SRC_FOLDER}/scripttemplates.h
-         ${SRC_FOLDER}/scripttemplates.cc
          ${SRC_FOLDER}/treewidget_createbackup_p.h
          ${SRC_FOLDER}/treewidget_createbackup_p.cc
          ${SRC_FOLDER}/command2.h
@@ -174,6 +170,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         README.md
         ${SRC_FOLDER}/doc/README.md
         src/combobox_scriptcreatename_p.h src/combobox_scriptcreatename_p.cc
+        src/bashscripttemplates.h src/bashscripttemplates.cpp
+        src/bashscriptgenerator.h src/bashscriptgenerator.cpp
     )
 
     qt_create_translation(QM_FILES ${SRC_FOLDER}/${CMAKE_SOURCE_DIR} ${TS_FILES})
