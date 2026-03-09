@@ -161,7 +161,6 @@ public:
 
   void setScriptName(const QString&& name_) noexcept;
 
-  // using DATA_MAP_ = QMultiHash<QString, QPair<QStringList, QStringList>>;
   AppTypes::RepoistoryCreateDataMap getCheckedItems();
 
   void reloadCreateBackupSettings(const AppTypes::RepoistoryCreateDataMap& dm_);

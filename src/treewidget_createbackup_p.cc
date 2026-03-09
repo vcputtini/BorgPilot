@@ -169,6 +169,8 @@ treeWidget_CreateBackup_P::getCheckedItems()
     } // end for iChildItem_
   } // end for
 
+  // qDebug() << __FUNCTION__ << "  " << data_m_.count();
+
   return data_m_;
 }
 
