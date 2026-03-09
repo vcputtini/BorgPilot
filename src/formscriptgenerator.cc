@@ -547,6 +547,7 @@ FormScriptGenerator::genInitScript()
                      " ";
   }
   bashGen_->setCommons(coptions_str_);
+  bashGen_->setMainModel(BashScriptGenerator::MainModel::Initialization);
   bashGen_->writeScript();
   Globals::setFilePermissions(fn_, 0755);
 }
@@ -630,17 +631,19 @@ FormScriptGenerator::genCreateBackup()
     case TestFileNames::Reasons::SaveWithNewname: {
       auto checkedItems = ui->treeWidget_CreateBackup->getCheckedItems();
       BashScriptGenerator gen_(testFileNames_.newFilename(), checkedItems);
+      gen_.setMainModel(BashScriptGenerator::MainModel::Create);
       gen_.writeScript();
       Globals::setFilePermissions(testFileNames_.newFilename(), 0755);
-      return;
+      break;
     }
     case TestFileNames::Reasons::NameProvidedByUser: {
       // any other new name provided by the user
-      return;
+      break;
     }
     case TestFileNames::Reasons::NotExists: {
       auto checkedItems = ui->treeWidget_CreateBackup->getCheckedItems();
       BashScriptGenerator gen_(fn_, checkedItems);
+      gen_.setMainModel(BashScriptGenerator::MainModel::Create);
       gen_.writeScript();
       Globals::setFilePermissions(fn_, 0755);
     }

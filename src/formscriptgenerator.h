@@ -58,9 +58,9 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+#include "bashscriptgenerator.h"
 #include "command2.h"
 #include "global_options.h"
-#include "scriptgen.h"
 
 #include "dialogshowlogfile.h"
 
@@ -302,7 +302,7 @@ private:
   QStandardItem* newItem;
   QStandardItemModel* siModel;
 
-  ScriptGen* shgen_;
+  BashScriptGenerator* bashGen_;
 
   enum class Pages : int
   {
@@ -357,6 +357,7 @@ private slots:
   void saveInitTable();
   void loadInitTable();
   void genInitScript();
+  void getDestinationPath();
 
   void setupCreateBackup();
   void genCreateBackupReload();
