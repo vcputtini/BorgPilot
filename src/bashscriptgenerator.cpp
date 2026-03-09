@@ -36,6 +36,7 @@
 #include "bashscriptgenerator.h"
 
 #include <QSettings>
+#include <qstringliteral.h>
 
 #include <sstream>
 
@@ -57,7 +58,7 @@ BashScriptGenerator::BashScriptGenerator(const QString& fileName_,
   out_file_.setFileName(fname_);
   out_file_.setPermissions(QFileDevice::ReadUser);
   if (!out_file_.open(QIODevice::ReadWrite | QIODevice::Text)) {
-    // fError(tr("Error trying to open file for writing/recording."));
+    fileError(tr("Error trying to open file for writing/recording."));
     return;
   }
   out_ts_.setDevice(&out_file_);
@@ -173,11 +174,35 @@ BashScriptGenerator::writeScript() noexcept
     commandForBackup();
   }
 
-  out_ts_ << bst_->getScriptTemplate(
-    BashScriptTemplates::ScriptTpl::TPL_BASH_MAIN);
+  switch (mainModel_) {
+    case BashScriptGenerator::MainModel::Create: {
+      std::string res_ = std::string(BashScriptTemplates::bash_main_def0) +
+                         std::string(BashScriptTemplates::bash_main_def2);
+      out_ts_ << res_.c_str();
+      break;
+    }
+    case BashScriptGenerator::MainModel::Initialization: {
+      std::string res_ = std::string(BashScriptTemplates::bash_main_def1) +
+                         std::string(BashScriptTemplates::bash_main_def2);
+      out_ts_ << res_.c_str();
+      break;
+    }
+    case BashScriptGenerator::MainModel::None:
+      break;
+  }
 
   out_file_.flush();
   out_file_.close();
+}
+
+/*!
+ * \brief BashScriptGenerator::setMainModel
+ * \param model_
+ */
+void
+BashScriptGenerator::setMainModel(MainModel model_)
+{
+  mainModel_ = std::move(model_);
 }
 
 /*!
@@ -249,7 +274,7 @@ BashScriptGenerator::commandForInitialization() noexcept
     temp_ss_ << QString(" %0/%1\n").arg(repoPath_, f0_).toStdString();
     out_ts_ << temp_ss_.str().c_str();
     temp_ss_.str(""); // clear contents
-  }
+  } // a_
   out_ts_ << "__log_info \"Initialization completed successfully.\"";
   out_ts_ << "\n\n}\n\n";
 }
@@ -265,6 +290,10 @@ void
 BashScriptGenerator::commandForBackup() noexcept
 {
   std::stringstream temp_ss_;
+
+  BashScriptTemplates bst_;
+  out_ts_ << bst_.getScriptTemplate(
+    BashScriptTemplates::ScriptTpl::TPL_BASH_BORG_CREATE);
 
   for (auto a_ = data_map_create_.constBegin();
        a_ != data_map_create_.constEnd();
@@ -299,13 +328,10 @@ BashScriptGenerator::commandForBackup() noexcept
                << key_.split('#').at(1).toStdString();
     }
 
-    BashScriptTemplates bst_;
-    QString lineCommand_ =
-      QString(bst_.getScriptTemplate(
-                BashScriptTemplates::ScriptTpl::TPL_BASH_BORG_CREATE))
-        .arg(temp_ss_.str());
-
-    out_ts_ << lineCommand_;
+    out_ts_ << "    borg " << temp_ss_.str().c_str() << '\n';
+    temp_ss_.str(""); // clear contents
 
   } // a_
+  out_ts_ << "\n    __log_info \"Backup completed successfully.\"";
+  out_ts_ << "\n\n}\n\n";
 }

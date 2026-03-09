@@ -40,6 +40,10 @@
 #include <QObject>
 #include <QString>
 #include <QTextStream>
+#include <qstringliteral.h>
+
+#include <algorithm>
+#include <array>
 #include <initializer_list>
 
 class BashScriptTemplates /*: public QObject*/
@@ -68,7 +72,9 @@ public:
 
   QString getScriptTemplate(ScriptTpl tpl_ = ScriptTpl::TPL_NONE) const;
 
-  // BASH SCRIPT TEMPLATES
+  //
+  // BASH SCRIPT TEMPLATES ===================================================
+  //
   static constexpr const char* bash_header_ = R"(#!/usr/bin/env bash
 # ==============================================================================
 # BorgPilot: Backup Script
@@ -235,16 +241,17 @@ __setup_borg_env() {
 
 )RAW";
 
+  /*!
+   * \brief bash_borg_create_
+   * \note This function has been intentionally left incomplete.
+   * The missing parts will be included in the code generation  by the
+   * BashScriptGenerator::commandForBackup() function.
+   */
   static constexpr const char* bash_borg_create_ =
     R"RAW(
 # Main backup function
 __borg_create() {
     __log_info "Starting BorgBackup backup process"
-
-    borg %0
-
-    __log_info "Backup completed successfully."
-}
 
 )RAW";
 
@@ -271,11 +278,54 @@ main() {
     __ensure_dirs
     __check_commands
     __create_pid_file
-
     __log_info "Environment successfully configured."
 
     __borg_create
 
+    __log_info "Script completed successfully."
+}
+
+# Execute main only if the script is called directly.
+[[ "${BASH_SOURCE[0]}" == "${0}" ]] && main "$@"
+
+# EOF
+
+)RAW";
+
+  static constexpr std::string_view bash_main_def0 =
+    R"RAW(
+main() {
+    __log_info "Starting BorgPilot Backup Script (PID: $SCRIPT_PID)"
+
+    __setup_borg_env
+    __check_root
+    __ensure_dirs
+    __check_commands
+    __create_pid_file
+    __log_info "Environment successfully configured."
+
+    __borg_create
+
+)RAW";
+
+  static constexpr std::string_view bash_main_def1 =
+    R"RAW(
+main() {
+    __log_info "Starting BorgPilot Backup Script (PID: $SCRIPT_PID)"
+
+    __setup_borg_env
+    __check_root
+    __ensure_dirs
+    __check_commands
+    __create_pid_file
+    __log_info "Environment successfully configured."
+
+    __borg_init_repository
+
+)RAW";
+
+  static constexpr std::string_view bash_main_def2 =
+    R"RAW(
     __log_info "Script completed successfully."
 }
 
