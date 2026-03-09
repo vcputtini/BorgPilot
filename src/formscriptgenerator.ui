@@ -17,7 +17,7 @@
    <iconset resource="qBorgPilot.qrc">
     <normaloff>:/images/borgpilot_16x16.png</normaloff>:/images/borgpilot_16x16.png</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0">
     <widget class="QFrame" name="frame_ToolBar">
      <property name="frameShape">
@@ -31,14 +31,14 @@
    <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget_ScriptGen">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_Init">
       <attribute name="title">
        <string>Tab 1</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_10">
-       <item row="0" column="0" colspan="2">
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -105,6 +105,81 @@
             </property>
             <property name="icon">
              <iconset theme="document-save"/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QFrame" name="frame_2">
+         <property name="frameShape">
+          <enum>QFrame::Shape::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Shadow::Raised</enum>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="0" column="0">
+             <widget class="QRadioButton" name="radioButton_Local">
+              <property name="text">
+               <string>Local</string>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QRadioButton" name="radioButton_Remote">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A key must be configured for ssh to access the remote server.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Remote</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>498</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QLineEdit" name="lineEdit_DestPath">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max. length: 254 bytes&lt;/p&gt;&lt;p&gt;Valid chars: Aa-Zz 0-9 _ /&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="maxLength">
+             <number>254</number>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+            <property name="placeholderText">
+             <string>Destination path</string>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QToolButton" name="toolButton_DestPath">
+            <property name="text">
+             <string>...</string>
             </property>
            </widget>
           </item>
@@ -182,74 +257,6 @@
          </layout>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QFrame" name="frame_2">
-         <property name="frameShape">
-          <enum>QFrame::Shape::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Shadow::Raised</enum>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_5">
-            <item row="0" column="0">
-             <widget class="QRadioButton" name="radioButton_Local">
-              <property name="text">
-               <string>Local</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QRadioButton" name="radioButton_Remote">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A key must be configured for ssh to access the remote server.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Remote</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>498</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="0" colspan="2">
-           <widget class="QLineEdit" name="lineEdit_DestPath">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max. length: 254 bytes&lt;/p&gt;&lt;p&gt;Valid chars: Aa-Zz 0-9 _ /&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="maxLength">
-             <number>254</number>
-            </property>
-            <property name="readOnly">
-             <bool>false</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Destination path</string>
-            </property>
-            <property name="clearButtonEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_Create">
@@ -275,58 +282,39 @@
           <string>Script Name</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_11">
-          <item row="1" column="3">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
+          <item row="1" column="4">
+           <widget class="QToolButton" name="toolButton_CreateReload">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reload definitions&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
+            <property name="text">
+             <string>...</string>
             </property>
-           </spacer>
-          </item>
-          <item row="1" column="7">
-           <spacer name="horizontalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::EditUndo"/>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
+           </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QLineEdit" name="lineEdit_ScriptCreateName">
+           <widget class="comboBox_ScriptCreateName_P" name="comboBox_ScriptCreateName">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>136</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>136</width>
               <height>0</height>
              </size>
             </property>
-            <property name="maximumSize">
-             <size>
-              <width>136</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Max length: 15 bytes&lt;/p&gt;&lt;p&gt;Valid chars: a-z 0-9 _&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="maxLength">
-             <number>15</number>
-            </property>
-            <property name="clearButtonEnabled">
+            <property name="editable">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="1" column="1">
            <widget class="QToolButton" name="toolButton_CreateOpen">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Load initialialization script definitions&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -339,7 +327,59 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="2">
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="6">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
           <item row="1" column="8">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="9">
+           <widget class="QToolButton" name="toolButton_ShowLog">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show log file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>...</string>
+            </property>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::DocumentPrintPreview"/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="7">
            <widget class="QToolButton" name="toolButton_CreateGen">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generate a new script&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -353,19 +393,6 @@
            </widget>
           </item>
           <item row="1" column="5">
-           <widget class="QToolButton" name="toolButton_CreateReload">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Reload definitions&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::EditUndo"/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="6">
            <widget class="QToolButton" name="toolButton_CreateSave">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Save definitions&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -377,32 +404,6 @@
              <iconset theme="document-save"/>
             </property>
            </widget>
-          </item>
-          <item row="1" column="10">
-           <widget class="QToolButton" name="toolButton_ShowLog">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show log file&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>...</string>
-            </property>
-            <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::DocumentPrintPreview"/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="9">
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </widget>
@@ -455,6 +456,11 @@
    <class>treeWidget_CreateBackup_P</class>
    <extends>QTreeWidget</extends>
    <header location="global">treewidget_createbackup_p.h</header>
+  </customwidget>
+  <customwidget>
+   <class>comboBox_ScriptCreateName_P</class>
+   <extends>QComboBox</extends>
+   <header location="global">combobox_scriptcreatename_p.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
