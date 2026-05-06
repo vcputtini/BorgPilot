@@ -158,17 +158,37 @@ SettingsHandler::testPermissions(QString& errorText_)
   return true;
 }
 
-void
-SettingsHandler::removeRepository(QAnyStringView key_)
+bool
+SettingsHandler::deleteConfig(const QString& scriptName)
 {
-  const QStringList group_name_ = key_.toString().split("/");
-  qDebug() << group_name_;
-  /*
-  QSettings settings_(ProgId::strOrganization(), ProgId::strInternalName());
-  settings_.beginGroup(group_name_[0].toStdString());
-  settings_.remove(group_name_[1].toStdString());
-  settings_.endGroup();
-  */
+  const QString sectionName_ = QStringLiteral("INITREPO_") + scriptName;
+
+  {
+    QSettings settings_(ProgId::strOrganization(), ProgId::strInternalName());
+    settings_.remove(sectionName_);
+    if (settings_.status() != QSettings::NoError) {
+      return false;
+    }
+  }
+
+  auto buildFilePath = [](const QString& scriptName) {
+    // QDir::cleanPath resolves normalizations such as duplicate bars.
+    const QString filePath_ =
+      QString("%0/.config/%1/qBorgPilot_%2.conf")
+        .arg(QDir::homePath(), ProgId::strOrganization(), scriptName);
+    return QDir::cleanPath(filePath_);
+  };
+
+  const QString filePath = buildFilePath(scriptName);
+  qDebug() << filePath;
+  if (QFile::exists(filePath)) {
+    if (!QFile::remove(filePath)) {
+      return false;
+    }
+  } else {
+    return false;
+  }
+  return true;
 }
 
 bool

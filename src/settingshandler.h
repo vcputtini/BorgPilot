@@ -137,11 +137,13 @@ public:
   bool testPermissions(QString& errorText_);
 
   /*!
-   * \brief Remove um completamente uma definicao de repositorio
-   * \param group_ Nome do grupo para remover
-   * \note nao reversivel
+   * \brief Remove the section in the main config and delete the associated file
+   * (Delete).
+   * \param scriptName The base name of the script.
+   * \return true only if the removal of the section and the associated file (if
+   * it exists) is successful.
    */
-  void removeRepository(QAnyStringView group_);
+  [[nodiscard]] bool deleteConfig(const QString& scriptName);
 
 private:
   /*!
