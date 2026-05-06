@@ -1,7 +1,7 @@
 Name:           qBorgPilot
 Version:        1.0.0
 Release:        1%{?dist}
-Summary:        Advanced graphical interface for BorgBacku
+Summary:        qBorgPilot is an advanced graphical interface for BorgBackup
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/vcputtini/qBorgPilot
