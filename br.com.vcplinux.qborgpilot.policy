@@ -4,9 +4,9 @@
 <policyconfig>
   <vendor>VCPLinux</vendor>
   <vendor_url>https://github.com/vcputtini/qBorgPilot</vendor_url>
-  <action id="br.com.jcfengenharia.qborgpilot.run">
-    <description>Executar o qBorgPilot como Administrador</description>
-    <message>A autenticação é necessária para gerenciar repositórios BorgBackup.</message>
+  <action id="br.com.vcplinux.qborgpilot.run">
+    <description>Run qBorgPilot as Administrator</description>
+    <message>Authentication is required to manage BorgBackup repositories.</message>
     <defaults>
       <allow_any>auth_admin</allow_any>
       <allow_inactive>auth_admin</allow_inactive>
