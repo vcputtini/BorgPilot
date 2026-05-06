@@ -178,6 +178,11 @@ FormUtilities::sl_execCommand()
           ui->lineEdit_Parameters->text().simplified();
         repoSource_ =
           std::move(QString("%1 %2::%3").arg(parameters_, repoName_, command_));
+        SettingsHandler handler_;
+        if (!handler_.deleteConfig(ui->comboBox_ScriptName->currentText())) {
+          MessageBox("Error while trying to remove configuration file.");
+          return;
+        }
       }
       break;
     }
