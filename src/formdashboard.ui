@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormDashboard</class>
+ <widget class="QWidget" name="FormDashboard">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>804</width>
+    <height>533</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dashboard</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qBorgPilot.qrc">
+    <normaloff>:/images/dashboard_disk_16x16.png</normaloff>:/images/dashboard_disk_16x16.png</iconset>
+  </property>
+ </widget>
+ <resources>
+  <include location="qBorgPilot.qrc"/>
+ </resources>
+ <connections/>
+</ui>

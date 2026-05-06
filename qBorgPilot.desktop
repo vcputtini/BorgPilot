@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=qBorgPilot
+GenericName=BorgBackup Manager
+Comment=Advanced graphical interface for BorgBacku
+Exec=pkexec /usr/bin/qBorgPilot
+Icon=qBorgPilot
+Terminal=false
+Type=Application
+Categories=System;Utility;Archiving;
