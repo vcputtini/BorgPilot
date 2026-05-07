@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=qBorgPilot
 GenericName=BorgBackup Manager
-Comment=Advanced graphical interface for BorgBacku
+Comment=Advanced graphical interface for BorgBackup
 Exec=pkexec /usr/bin/qBorgPilot
 Icon=qBorgPilot
 Terminal=false
