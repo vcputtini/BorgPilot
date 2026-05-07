@@ -1,7 +1,7 @@
 Name:           qBorgPilot
-Version:        1.0.0
+Version:        1.0.1
 Release:        1%{?dist}
-Summary:        qBorgPilot is an advanced graphical interface for BorgBackup
+Summary:        Advanced graphical interface for BorgBacku
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/vcputtini/qBorgPilot
@@ -57,6 +57,9 @@ written in Qt6/C++.
 %{_datadir}/%{name}/translations/*.qm
 
 %changelog
+* Thu May 07 2026 Volnei Cervi Puttini <vcputtini@gmail.com> - 1.0.1-1
+- New release version: 1.0.1
+
 * Mon May 04 2026 Volnei Cervi Puttini <vcputtini@gmail.com> - 1.0.0-1
 - Fixed CMake compilation error via add_custom_target for translations
 - Refactored RPM macros to comply with Fedora 43
