@@ -307,6 +307,9 @@ main() {
 
 )RAW";
 
+  /*!
+   * \brief bash_main_def1 skel for repository initialization
+   */
   static constexpr std::string_view bash_main_def1 =
     R"RAW(
 main() {

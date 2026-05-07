@@ -52,8 +52,8 @@
 BashScriptGenerator::BashScriptGenerator(const QString& fileName_,
                                          QObject* parent)
   : QObject{ parent }
-  , m_out_file_{ std::move(fileName_) }
-  , m_fname_{ std::move(fileName_) }
+  , m_out_file_{ fileName_ }
+  , m_fname_{ fileName_ }
 {
   m_out_file_.setFileName(m_fname_);
   m_out_file_.setPermissions(QFileDevice::ReadUser);
@@ -109,7 +109,7 @@ BashScriptGenerator::setRepositoryPath(const QString& path_) noexcept
 BashScriptGenerator&
 BashScriptGenerator::append(int index_, AppTypes::InitRepositoryTuple data_)
 {
-  m_data_map_.insert(std::move(index_), std::move(data_));
+  m_data_map_.insert(index_, data_);
   return *this;
 }
 
@@ -168,20 +168,16 @@ BashScriptGenerator::writeScript() noexcept
   m_out_ts_ << bst_->getScriptTemplate(
     BashScriptTemplates::ScriptTpl::TPL_BASH_CLEANUP);
 
-  if (m_data_map_create_.isEmpty()) {
-    commandForInitialization();
-  } else {
-    commandForBackup();
-  }
-
   switch (m_mainModel_) {
     case BashScriptGenerator::MainModel::Create: {
+      commandForBackup();
       std::string res_ = std::string(BashScriptTemplates::bash_main_def0) +
                          std::string(BashScriptTemplates::bash_main_def2);
       m_out_ts_ << res_.c_str();
       break;
     }
     case BashScriptGenerator::MainModel::Initialization: {
+      commandForInitialization();
       std::string res_ = std::string(BashScriptTemplates::bash_main_def1) +
                          std::string(BashScriptTemplates::bash_main_def2);
       m_out_ts_ << res_.c_str();
