@@ -557,6 +557,8 @@ FormScriptGenerator::sl_genInitScript()
   }
   fn_ = *result;
 
+  qDebug() << fn_;
+
   FormScriptGenerator::TestFileNames testFileNames_;
   switch (testFileNames_.test(fn_)) {
     case TestFileNames::Reasons::SaveWithNewname: {
@@ -572,7 +574,10 @@ FormScriptGenerator::sl_genInitScript()
       bashGen_ = new BashScriptGenerator(fn_, this);
     }
   }
-  connect(bashGen_, SIGNAL(fileError(QString)), this, SLOT(fileError(QString)));
+
+  connect(
+    bashGen_, SIGNAL(fileError(QString)), this, SLOT(sl_fileError(QString)));
+
   if (ui->radioButton_Remote->isChecked()) {
     bashGen_->setRepositoryPath("ssh://" +
                                 ui->lineEdit_DestPath->text().simplified());
@@ -580,18 +585,23 @@ FormScriptGenerator::sl_genInitScript()
     bashGen_->setRepositoryPath(ui->lineEdit_DestPath->text().simplified());
   }
 
+  qDebug() << ui->tableWidget_RepoNames->rowCount();
   for (int i_ = 0; i_ < ui->tableWidget_RepoNames->rowCount(); ++i_) {
     const QLineEdit* name_ =
       qobject_cast<QLineEdit*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::Name)));
     if (!name_) {
+      qWarning() << QStringLiteral("%0: %1").arg(
+        __FUNCTION__, "QLineEdit name_ error. [nullptr]");
       break;
     }
 
-    const QLineEdit* archive_ =
-      qobject_cast<QLineEdit*>(ui->tableWidget_RepoNames->cellWidget(
+    const QComboBox* archive_ =
+      qobject_cast<QComboBox*>(ui->tableWidget_RepoNames->cellWidget(
         i_, static_cast<int>(Columns::Archive)));
     if (!archive_) {
+      qWarning() << QStringLiteral("%0: %1").arg(
+        __FUNCTION__, "QComboBox archive_ error. [nullptr]");
       break;
     }
 
@@ -612,13 +622,12 @@ FormScriptGenerator::sl_genInitScript()
         i_, static_cast<int>(Columns::StoQuota)));
 
     auto t_ =
-      std::make_tuple(name_->text().simplified(),
-                      archive_->text().simplified(),
+      std::make_tuple(name_->text().trimmed(),
+                      archive_->currentText().trimmed(),
                       encmode_->currentIndex(),
                       (append_->checkState() == Qt::Checked ? 1 : 0),
                       (makedirpath_->checkState() == Qt::Checked ? 1 : 0),
                       sto_quota_->text());
-
     bashGen_->append(i_, t_);
   }
 
