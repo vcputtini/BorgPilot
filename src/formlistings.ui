@@ -266,7 +266,8 @@
             <string>...</string>
            </property>
            <property name="icon">
-            <iconset theme="QIcon::ThemeIcon::MediaPlaybackStart"/>
+            <iconset resource="qBorgPilot.qrc">
+             <normaloff>:/images/exec-general-mono.png</normaloff>:/images/exec-general-mono.png</iconset>
            </property>
           </widget>
          </item>
