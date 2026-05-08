@@ -1,5 +1,5 @@
 Name:           qBorgPilot
-Version:        1.0.1
+Version:        1.1.0
 Release:        1%{?dist}
 Summary:        Advanced graphical interface for BorgBacku
 
@@ -57,6 +57,9 @@ written in Qt6/C++.
 %{_datadir}/%{name}/translations/*.qm
 
 %changelog
+* Thu May 08 2026 Volnei Cervi Puttini <vcputtini@gmail.com> - 1.1.0-1
+- New release version: 1.1.0
+
 * Thu May 07 2026 Volnei Cervi Puttini <vcputtini@gmail.com> - 1.0.1-1
 - New release version: 1.0.1
 
