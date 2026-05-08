@@ -13,5 +13,10 @@
         <file>images/borg_icon_5.png</file>
         <file>images/dashboard_disk_16x16.png</file>
         <file>images/dashboard_disk_128x128.png</file>
+        <file>images/exec-bash-mono.png</file>
+        <file>images/exec-general-mono.png</file>
+        <file>images/create-or-new-bashscrip-mono.png</file>
+        <file>images/exec-initi-backup.png</file>
+        <file>images/exec-create-backup.png</file>
     </qresource>
 </RCC>
