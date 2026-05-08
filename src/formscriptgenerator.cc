@@ -115,49 +115,13 @@ FormScriptGenerator::sl_dialogViewCreateBashScript_triggered()
 void
 FormScriptGenerator::sl_toolButton_ExecScript()
 {
-  const QModelIndex index = ui->listView_ExecScripts->currentIndex();
-  Q_ASSERT(!index.isValid());
+  scriptExecution(ExecTypes::Create);
+}
 
-  if (!index.isValid()) {
-    QMessageBox::warning(this,
-                         tr(ProgId::Name),
-                         tr("Script was not selected."),
-                         QMessageBox::Close);
-    return;
-  }
-
-  const QString scriptName = index.data(Qt::DisplayRole).toString();
-  if (scriptName.isEmpty()) {
-    return;
-  }
-
-  if (!m_scriptRunner) {
-    m_scriptRunner = new BashScriptRunner(this);
-
-    connect(m_scriptRunner,
-            &BashScriptRunner::sig_bashOutput,
-            this,
-            &FormScriptGenerator::sl_msgProcessOutput);
-
-    connect(m_scriptRunner,
-            &BashScriptRunner::sig_bashFinished,
-            this,
-            &FormScriptGenerator::sl_msgProcessTerminate);
-  }
-
-  if (m_scriptRunner->isRunning()) {
-    [[maybe_unused]] auto ret_ = QMessageBox::information(
-      this, "Information", "Please wait for the current script to finish.");
-    return;
-  }
-
-  SettingsHandler settings_;
-  SettingsHandler::Preferences prefs_ = settings_.relodPreferences();
-  const QString dest_ =
-    QString("%0/create_%1.sh").arg(prefs_.localScriptPath, scriptName);
-
-  // run script thread
-  m_scriptRunner->runScript(dest_, {});
+void
+FormScriptGenerator::sl_toolButton_ExecInitScripts()
+{
+  scriptExecution(ExecTypes::Init);
 }
 
 void
@@ -730,6 +694,68 @@ FormScriptGenerator::sl_genCreateBackup()
 }
 
 void
+FormScriptGenerator::scriptExecution(ExecTypes type)
+{
+  ui->textBrowser_Results->clear();
+
+  const QModelIndex index = ui->listView_ExecScripts->currentIndex();
+  Q_ASSERT(!index.isValid());
+
+  if (!index.isValid()) {
+    QMessageBox::warning(this,
+                         tr(ProgId::Name),
+                         tr("Script was not selected."),
+                         QMessageBox::Close);
+    return;
+  }
+
+  const QString scriptName = index.data(Qt::DisplayRole).toString();
+
+  QMessageBox msgBox;
+  msgBox.setText(type == ExecTypes::Init ? tr("Repository Initialization")
+                                         : tr("Backup Execution"));
+  msgBox.setInformativeText(
+    tr("Confirm the execution of script?: <b>%0</b>").arg(scriptName));
+  msgBox.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  msgBox.setDefaultButton(QMessageBox::No);
+  if (msgBox.exec() == QMessageBox::No) {
+    return;
+  }
+
+  if (!m_scriptRunner) {
+    m_scriptRunner = new BashScriptRunner(this);
+
+    connect(m_scriptRunner,
+            &BashScriptRunner::sig_bashOutput,
+            this,
+            &FormScriptGenerator::sl_msgProcessOutput);
+
+    connect(m_scriptRunner,
+            &BashScriptRunner::sig_bashFinished,
+            this,
+            &FormScriptGenerator::sl_msgProcessTerminate);
+  }
+
+  if (m_scriptRunner->isRunning()) {
+    [[maybe_unused]] auto ret_ = QMessageBox::information(
+      this, "Information", "Please wait for the current script to finish.");
+    return;
+  }
+
+  SettingsHandler settings_;
+  SettingsHandler::Preferences prefs_ = settings_.relodPreferences();
+  const QString dest_ =
+    QString("%0/%1_%2.sh")
+      .arg(prefs_.localScriptPath,
+           (type == ExecTypes::Create ? QStringLiteral("create")
+                                      : QStringLiteral("init")),
+           scriptName);
+
+  // run script thread
+  m_scriptRunner->runScript(dest_, {});
+}
+
+void
 FormScriptGenerator::createToolBar()
 {
   QVBoxLayout* mainLayout_ = new QVBoxLayout(ui->frame_ToolBar);
@@ -888,6 +914,11 @@ FormScriptGenerator::setupButtons()
           SIGNAL(clicked(bool)),
           this,
           SLOT(sl_toolButton_ExecScript()));
+
+  connect(ui->toolButton_ExecInitScripts,
+          SIGNAL(clicked(bool)),
+          this,
+          SLOT(sl_toolButton_ExecInitScripts()));
 
   connect(ui->toolButton_SaveResults,
           SIGNAL(clicked(bool)),

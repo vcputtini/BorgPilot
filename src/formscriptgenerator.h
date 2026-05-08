@@ -328,6 +328,14 @@ private:
     Columns::Append, Columns::MakeDirPath, Columns::StoQuota
   };
 
+  enum class ExecTypes
+  {
+    Init,
+    Create
+  };
+
+  void scriptExecution(ExecTypes type);
+
   void setupInitRepoTable();
   void createToolBar();
   void setupCharValidation();
@@ -381,6 +389,8 @@ private slots:
   void sl_dialogViewCreateBashScript_triggered();
 
   void sl_toolButton_ExecScript();
+  void sl_toolButton_ExecInitScripts();
+
   void sl_toolButton_SaveResults();
 
   void sl_msgProcessOutput(const QString& line);
