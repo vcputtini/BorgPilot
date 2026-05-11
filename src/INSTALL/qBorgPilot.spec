@@ -1,12 +1,19 @@
+# ---------------------------------------------------------------------------
+%global	autor_name		Volnei Cervi Puttini
+%global autor_email 		vcputtini@vcplinux.com.br
+%global	current_version		1.1.0
+%global spec_release		1
+# ---------------------------------------------------------------------------
+
 Name:           qBorgPilot
-Version:        1.1.0
-Release:        1%{?dist}
-Summary:        Advanced graphical interface for BorgBacku
+Version:        %{current_version}
+Release:        %{spec_release}%{?dist}
+Summary:        Advanced graphical interface for BorgBackup
 
 License:        GPL-3.0-or-later
 URL:            https://github.com/vcputtini/qBorgPilot
 Source0:        %{name}-%{version}.tar.gz
-Packager:       Volnei Cervi Puttini <vcputtini@vcplinux.com.br>
+Packager:       %{autor_name} <%{autor_email}>
 
 # Dependências de Build para Fedora 43 / Qt6
 BuildRequires:  cmake >= 3.5
@@ -57,7 +64,7 @@ written in Qt6/C++.
 %{_datadir}/%{name}/translations/*.qm
 
 %changelog
-* Thu May 08 2026 Volnei Cervi Puttini <vcputtini@gmail.com> - 1.1.0-1
+* Fri May 08 2026 %{autor_name} <%{autor_email}> - %{current_version}-%{spec_release}
 - New release version: 1.1.0
 
 * Thu May 07 2026 Volnei Cervi Puttini <vcputtini@gmail.com> - 1.0.1-1
