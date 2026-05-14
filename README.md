@@ -13,6 +13,13 @@ BorgPilot performs the following tasks:
 - Allows the initialization of local and remote repositories (passwordless SSH remote connection keys must be correctly configured)
 - Allows the creation of backups. Through the interface, the user can define the backup characteristics, such as: source files, common options, and optional options, and their values.
 - Allows for controlled execution of generated backup scripts.
+
+  Why generate Bash scripts to execute operations instead of executing them internally?
+
+  The answer is simple: Freedom. By generating a Bash script, the operator has the freedom
+  to do whatever they deem most appropriate, such as scheduling and customizations, without
+  a restrictive dependency on BorgPilot.
+
 - List and Search: Allows for listing the contents of the repositories in a simple manner, allowing the use of standard borgbackup patterns.
 - Utilities: Allows the execution of the commands: info, list, check, diff, rename, delete, and prune, displaying the results in the interface and allowing
 the results to be saved to files. - BorgBackup Settings: Directories and Files, General, and Automatic Responses.
@@ -21,18 +28,29 @@ For repository initialization and backup functions, BorgPilot will generate a ba
 You can make changes to the generated script if necessary. For examples, see src/doc/scripts-sample.
 - Dashboard: The dashboard module centralizes telemetry and visualization of data from active repositories.
 
-
 ### Build Requirements
 - C++20 or later
 - Qt 6.11 or later
 
 ### Development Environment:
 Tested on:
+
 - Fedora 42 or later
-- clang 21.1.8
-- (GCC) 15.2.1
+- clang 21.1.x
+- (GCC) 15.2.x
 - cmake version 3.31.x
 - QtCreator 19.0.x (clang-format Mozilla style)
+
+### Required external programs
+The programs listed below are (R)equired ou (M)andatory for the correct functioning of BorgPilot.
+
+- (M) borg
+- (M) gnupg2
+- (M) ssh
+- (R) pass (the standard unix password manager)
+- (R) secret-tools
+- (R) systemd-creds
+- (R)rsync
 
 ### Documentation
 Run Doxygen in `src/` to generate HTML docs in `src/doc/html`.
