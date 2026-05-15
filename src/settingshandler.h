@@ -176,7 +176,6 @@ private:
   static constexpr const char* stoquota_ = "B_STOQUOTA_%0";
 
 signals:
-  /*! \brief Emitted to provide updates on current operations or errors. */
   /*!
    * \brief Emitted to provide updates on whether there were any errors while
    * trying to access the configuration file.

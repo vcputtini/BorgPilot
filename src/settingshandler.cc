@@ -341,7 +341,6 @@ SettingsHandlerCreate::save(
                       ProgId::strInternalName() + "_" + scriptName);
 
   if (settings_.isWritable()) {
-    // qDebug() << __FUNCTION__ << scriptName;
     settings_.beginGroup(scriptName);
 
     int cnt_{ 0 };
@@ -404,9 +403,10 @@ SettingsHandler::savePreferences(Preferences prefs_)
 
   if (settings_.isWritable()) {
     settings_.beginGroup(R"(HPreferences)");
-    settings_.setValue(R"(LOCALSCRIPTPATH)", prefs_.localScriptPath);
-    settings_.setValue(R"(LOCALLOGPATH)", prefs_.localLogPath);
-    settings_.setValue(R"(LOCALDATAPATH)", prefs_.localDataPath);
+    settings_.setValue(R"(LOCALSCRIPTPATH)",
+                       prefs_.localScriptPath.simplified());
+    settings_.setValue(R"(LOCALLOGPATH)", prefs_.localLogPath.simplified());
+    settings_.setValue(R"(LOCALDATAPATH)", prefs_.localDataPath.simplified());
     settings_.endGroup();
     settings_.sync();
     return true;
@@ -419,23 +419,34 @@ SettingsHandler::relodPreferences()
 {
   Preferences prefs_{};
 
+  QDir dirs_;
+
   QSettings settings_(ProgId::strOrganization(), ProgId::strInternalName());
   if (settings_.status() == QSettings::AccessError ||
       settings_.status() == QSettings::FormatError) {
-    prefs_.localLogPath = "";
-    prefs_.localScriptPath = "";
+    prefs_.localLogPath.clear();
+    prefs_.localScriptPath.clear();
+    prefs_.localDataPath.clear();
     const QString error =
       (settings_.status() == QSettings::AccessError ? "Access Error"
                                                     : "Format Error");
     emit sig_status(QString("Erro reading preferences: %0").arg(error));
   }
   settings_.beginGroup(R"(HPreferences)");
-  prefs_.localScriptPath =
-    std::move(settings_.value(R"(LOCALSCRIPTPATH)", "**script").toString());
-  prefs_.localLogPath =
-    std::move(settings_.value(R"(LOCALLOGPATH)", "**log").toString());
-  prefs_.localDataPath =
-    std::move(settings_.value(R"(LOCALDATAPATH)", "**data").toString());
+  prefs_.localScriptPath = settings_.value(R"(LOCALSCRIPTPATH)").toString();
+  prefs_.localLogPath = settings_.value(R"(LOCALLOGPATH)").toString();
+  prefs_.localDataPath = settings_.value(R"(LOCALDATAPATH)").toString();
+
+  if (prefs_.localScriptPath.isEmpty()) {
+    prefs_.localScriptPath = dirs_.homePath() + "/qBorgPilot/scripts";
+  }
+  if (prefs_.localLogPath.isEmpty()) {
+    prefs_.localLogPath = "/var/log/qBorgPilot";
+  }
+  if (prefs_.localDataPath.isEmpty()) {
+    prefs_.localDataPath = dirs_.homePath() + "/qBorgPilot/data";
+  }
+
   settings_.endGroup();
   return prefs_;
 }
