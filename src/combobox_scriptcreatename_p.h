@@ -52,8 +52,7 @@ public:
   void refresh();
 
 private:
-  void loadFromIni();
-  void clearAndPopulate(const QStringList& sections_);
+  void populateScriptNames();
 };
 
 #endif // COMBOBOX_SCRIPTCREATENAME_P_H

@@ -43,36 +43,38 @@
 comboBox_ScriptCreateName_P::comboBox_ScriptCreateName_P(QWidget* parent)
   : QComboBox(parent)
 {
-  loadFromIni();
+  populateScriptNames();
 }
 
 void
 comboBox_ScriptCreateName_P::refresh()
 {
-  loadFromIni();
+  populateScriptNames();
 }
 
 void
-comboBox_ScriptCreateName_P::loadFromIni()
+comboBox_ScriptCreateName_P::populateScriptNames()
 {
-  QSettings settings_(ProgId::strOrganization(), ProgId::strInternalName());
+  blockSignals(true);
 
-  QStringList sections_ = settings_.childGroups();
-  clearAndPopulate(sections_);
-}
-
-void
-comboBox_ScriptCreateName_P::clearAndPopulate(const QStringList& sections_)
-{
   clear();
-  if (sections_.isEmpty()) {
-    return;
-  }
+
+  const QSettings settings(ProgId::strOrganization(),
+                           ProgId::strInternalName());
+  QStringList groups = settings.childGroups();
+
+  // C++20: Filters using ranges for more efficient
+  auto scriptNames = groups | std::views::filter([](const QString& group) {
+                       return group.contains("INITREPO_");
+                     }) |
+                     std::views::transform([](const QString& group) {
+                       return group.section("INITREPO_", 1);
+                     });
 
   addItem(""); // First item is void.
-  for (const QString& section_ : sections_) {
-    if (section_.startsWith("INITREPO_")) {
-      addItem(section_.section('_', 1, 1).simplified());
-    }
+  for (const auto& name : scriptNames) {
+    addItem(name);
   }
+  blockSignals(false);
+  update();
 }
