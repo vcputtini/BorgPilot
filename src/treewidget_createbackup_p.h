@@ -103,6 +103,14 @@ public:
       case GlobalOptions::Optionals_e::Dryrun:
       case GlobalOptions::Optionals_e::Stats:
       case GlobalOptions::Optionals_e::List:
+      case GlobalOptions::Optionals_e::Compression: {
+        setToolTip("Basics: [auto,] <b>lz4 (default)</b><br>lzma,N "
+                   "(N=0..9)<br>lib,N (N=0..9)");
+        setMaxLength(15);
+        QRegularExpression regExp_(R"(^[a-z0-9,]+$)");
+        setValidator(new QRegularExpressionValidator(regExp_, this));
+        break;
+      }
       case GlobalOptions::Optionals_e::Json:
       case GlobalOptions::Optionals_e::NoCacheSync:
       case GlobalOptions::Optionals_e::ContentFromCommand:
@@ -134,13 +142,8 @@ public:
       case GlobalOptions::Optionals_e::Timestamp:
       case GlobalOptions::Optionals_e::CheckpointInterval:
       case GlobalOptions::Optionals_e::ChunkerParams:
-      case GlobalOptions::Optionals_e::Compression: {
-        setToolTip("Basics: [auto,] <b>lz4 (default)</b><br>lzma,N "
-                   "(N=0..9)<br>lib,N (N=0..9)");
-        setMaxLength(15);
-        QRegularExpression regExp_(R"(^[a-z0-9,]+$)");
-        setValidator(new QRegularExpressionValidator(regExp_, this));
-      } break;
+      default: {
+      }
     }
   }
 };

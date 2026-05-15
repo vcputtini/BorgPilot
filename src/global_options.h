@@ -87,6 +87,7 @@ public:
     Dryrun = 0x00,
     Stats,
     List,
+    Compression,
     Filter,
     Json,
     NoCacheSync,
@@ -121,8 +122,7 @@ public:
     Comment,
     Timestamp,
     CheckpointInterval,
-    ChunkerParams,
-    Compression
+    ChunkerParams
   };
 
   enum class eGlobalOptions

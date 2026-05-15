@@ -359,6 +359,12 @@ treeWidget_CreateBackup_P::populate()
               setItemWidget(m_levelItem2_, 4, filter_);
               break;
             }
+            case GlobalOptions::Optionals_e::Compression: {
+              OptionalsLineEdit* compression_ =
+                new OptionalsLineEdit(optionalBeginIt_->first, this);
+              setItemWidget(m_levelItem2_, 4, compression_);
+              break;
+            }
             case GlobalOptions::Optionals_e::Filter: {
               OptionalsLineEdit* filter_ =
                 new OptionalsLineEdit(optionalBeginIt_->first, this);
@@ -423,12 +429,6 @@ treeWidget_CreateBackup_P::populate()
               OptionalsLineEdit* comment_ =
                 new OptionalsLineEdit(optionalBeginIt_->first, this);
               setItemWidget(m_levelItem2_, 4, comment_);
-              break;
-            }
-            case GlobalOptions::Optionals_e::Compression: {
-              OptionalsLineEdit* compression_ =
-                new OptionalsLineEdit(optionalBeginIt_->first, this);
-              setItemWidget(m_levelItem2_, 4, compression_);
               break;
             }
             default: {

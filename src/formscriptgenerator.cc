@@ -54,9 +54,9 @@
 FormScriptGenerator::FormScriptGenerator(QWidget* parent)
   : QWidget(parent)
   , ui(new Ui::FormScriptGenerator)
-  , mainWindowToolBar(new QMainWindow)
-  , toolBarSettings(new QToolBar)
-  , newItem(new QStandardItem)
+  , mainWindowToolBar(new QMainWindow(this))
+  , toolBarSettings(new QToolBar(this))
+  , newItem(new QStandardItem())
 {
   ui->setupUi(this);
 
@@ -230,7 +230,7 @@ FormScriptGenerator::sl_setupCreateBackup()
   ui->treeWidget_CreateBackup->clear();
 
   ui->treeWidget_CreateBackup->setScriptName(
-    ui->comboBox_ScriptCreateName->currentText().simplified());
+    ui->comboBox_ScriptName_Create->currentText().simplified());
   ui->treeWidget_CreateBackup->populate();
 }
 
@@ -262,11 +262,11 @@ FormScriptGenerator::sl_genCreateBackupReload()
   SettingsHandlerCreate settings_;
 
   AppTypes::RepoistoryCreateDataMap undo_map_ =
-    settings_.read(ui->comboBox_ScriptCreateName->currentText().simplified());
+    settings_.read(ui->comboBox_ScriptName_Create->currentText().simplified());
 
   ui->treeWidget_CreateBackup->clearTree(); // reset tree
   ui->treeWidget_CreateBackup->setScriptName(
-    ui->comboBox_ScriptCreateName->currentText().simplified());
+    ui->comboBox_ScriptName_Create->currentText().simplified());
   ui->treeWidget_CreateBackup->reloadCreateBackupSettings(undo_map_);
 }
 
@@ -295,12 +295,12 @@ FormScriptGenerator::sl_saveInitTable()
   }
 
   if (setHandler.isScriptExists(
-        ui->comboBox_CreateScriptName->currentText().trimmed())) {
+        ui->comboBox_ScriptName_Init->currentText().trimmed())) {
     switch (
       message_("A script with this name already exists.",
                "<b>Only choose save if you haven't run the script yet!<b>")) {
       case QMessageBox::Cancel: {
-        ui->comboBox_CreateScriptName->setFocus();
+        ui->comboBox_ScriptName_Create->setFocus();
         return;
       }
     }
@@ -321,7 +321,6 @@ FormScriptGenerator::sl_saveInitTable()
             i_, static_cast<int>(Columns::Archive)))) {
 
       archiveText_ = archiveCombo_->currentText().trimmed();
-
       if (archiveText_.isEmpty()) {
         continue;
       }
@@ -370,7 +369,7 @@ FormScriptGenerator::sl_saveInitTable()
                      " ";
   }
 
-  defs.scrName_ = ui->comboBox_CreateScriptName->currentText().trimmed();
+  defs.scrName_ = ui->comboBox_ScriptName_Init->currentText().trimmed();
 
   (ui->radioButton_Local->isChecked() ? defs.mode_ = 0 : defs.mode_ = 1);
   defs.destRepo_ = ui->lineEdit_DestPath->text().simplified();
@@ -392,17 +391,17 @@ FormScriptGenerator::sl_saveInitTable()
 void
 FormScriptGenerator::sl_loadInitTable()
 {
-  if (ui->comboBox_CreateScriptName->currentText().isEmpty()) {
+  if (ui->comboBox_ScriptName_Init->currentText().isEmpty()) {
     QMessageBox::warning(this,
                          tr(ProgId::Name),
                          tr("Script name not provided!"),
                          QMessageBox::Close);
-    ui->comboBox_CreateScriptName->setFocus();
+    ui->comboBox_ScriptName_Init->setFocus();
     return;
   }
   SettingsHandler setHandler_;
   auto list_ = std::move(setHandler_.readInitScriptDefs(
-    ui->comboBox_CreateScriptName->currentText().trimmed()));
+    ui->comboBox_ScriptName_Init->currentText().trimmed()));
 
   if (const auto& value_ = Globals::find_<QString, QString>(list_, "A_MODE");
       value_ != nullptr) {
@@ -426,7 +425,7 @@ FormScriptGenerator::sl_loadInitTable()
     name_value_ = new NameRepoLineEdit();
     name_value_->setText(Globals::findOne_<QString>(
       QString("B_REPONAME_%0").arg(i_),
-      ui->comboBox_CreateScriptName->currentText().trimmed()));
+      ui->comboBox_ScriptName_Init->currentText().trimmed()));
     if (name_value_->text().isEmpty()) {
       continue;
     }
@@ -448,9 +447,9 @@ FormScriptGenerator::sl_loadInitTable()
       tr("Select or type archive name..."));
     const QString savedArchive = Globals::findOne_<QString>(
       QStringLiteral("B_ARCHIVE_%1").arg(i_),
-      ui->comboBox_CreateScriptName->currentText().trimmed());
+      ui->comboBox_ScriptName_Init->currentText().trimmed());
     if (savedArchive.isEmpty()) {
-      delete archiveCombo; // Evita vazamento de memória antes do continue
+      delete archiveCombo; // Prevents memory leaks before continuing.
       continue;
     }
     archiveCombo->setCurrentText(savedArchive);
@@ -462,7 +461,7 @@ FormScriptGenerator::sl_loadInitTable()
     encmode_value_ = new EncModeComboBox();
     const auto a_ = Globals::findOne_<QString>(
       QString("B_ENCMODE_%0").arg(i_),
-      ui->comboBox_CreateScriptName->currentText().trimmed());
+      ui->comboBox_ScriptName_Init->currentText().trimmed());
     encmode_value_->setCurrentIndex(a_.toInt());
     ui->tableWidget_RepoNames->setCellWidget(
       i_, static_cast<int>(Columns::EncMode), encmode_value_);
@@ -471,7 +470,7 @@ FormScriptGenerator::sl_loadInitTable()
     append_value_ = new CheckBox();
     auto chk_ = Globals::findOne_<QString>(
       QString("B_APPEND_%0").arg(i_),
-      ui->comboBox_CreateScriptName->currentText().trimmed());
+      ui->comboBox_ScriptName_Init->currentText().trimmed());
     append_value_->setChecked(chk_.toInt());
     ui->tableWidget_RepoNames->setCellWidget(
       i_, static_cast<int>(Columns::Append), append_value_);
@@ -479,7 +478,7 @@ FormScriptGenerator::sl_loadInitTable()
     mkparentdir_value_ = new CheckBox();
     chk_ = Globals::findOne_<QString>(
       QString("B_MKPARENTDIR_%0").arg(i_),
-      ui->comboBox_CreateScriptName->currentText().trimmed());
+      ui->comboBox_ScriptName_Init->currentText().trimmed());
     mkparentdir_value_->setChecked(chk_.toInt());
     ui->tableWidget_RepoNames->setCellWidget(
       i_, static_cast<int>(Columns::MakeDirPath), mkparentdir_value_);
@@ -487,7 +486,7 @@ FormScriptGenerator::sl_loadInitTable()
     stoquota_value_ = new StoQuotaLineEdit();
     stoquota_value_->setText(Globals::findOne_<QString>(
       QString("B_STOQUOTA_%0").arg(i_),
-      ui->comboBox_CreateScriptName->currentText().trimmed()));
+      ui->comboBox_ScriptName_Init->currentText().trimmed()));
     if (stoquota_value_->text().isEmpty()) {
       continue;
     }
@@ -499,7 +498,7 @@ FormScriptGenerator::sl_loadInitTable()
 void
 FormScriptGenerator::sl_genInitScript()
 {
-  if (ui->comboBox_CreateScriptName->currentText().isEmpty()) {
+  if (ui->comboBox_ScriptName_Init->currentText().isEmpty()) {
     return;
   }
 
@@ -511,28 +510,27 @@ FormScriptGenerator::sl_genInitScript()
     tr("Save Script As ..."),
     QString("%0/init_%1")
       .arg(prefs_.localScriptPath,
-           ui->comboBox_CreateScriptName->currentText().trimmed()),
+           ui->comboBox_ScriptName_Init->currentText().trimmed()),
     tr("Script (*.sh)"),
     "sh");
 
-  QString fn_{};
+  QString fn_;
   if (!result) {
     return;
   }
   fn_ = *result;
 
-  qDebug() << fn_;
-
   FormScriptGenerator::TestFileNames testFileNames_;
   switch (testFileNames_.test(fn_)) {
     case TestFileNames::Reasons::SaveWithNewname: {
-      bashGen_ = new BashScriptGenerator(
-        QString("%0").arg(testFileNames_.newFilename()), this);
+      fn_ = testFileNames_.newFilename();
+      bashGen_ = new BashScriptGenerator(fn_, this);
       break;
     }
     case TestFileNames::Reasons::NameProvidedByUser: {
       // any other new name provided by the user
-      return;
+      bashGen_ = new BashScriptGenerator(fn_, this);
+      break;
     }
     case TestFileNames::Reasons::NotExists: {
       bashGen_ = new BashScriptGenerator(fn_, this);
@@ -549,7 +547,6 @@ FormScriptGenerator::sl_genInitScript()
     bashGen_->setRepositoryPath(ui->lineEdit_DestPath->text().simplified());
   }
 
-  qDebug() << ui->tableWidget_RepoNames->rowCount();
   for (int i_ = 0; i_ < ui->tableWidget_RepoNames->rowCount(); ++i_) {
     const QLineEdit* name_ =
       qobject_cast<QLineEdit*>(ui->tableWidget_RepoNames->cellWidget(
@@ -608,6 +605,7 @@ FormScriptGenerator::sl_genInitScript()
   bashGen_->setCommons(coptions_str_);
   bashGen_->setMainModel(BashScriptGenerator::MainModel::Initialization);
   bashGen_->writeScript();
+
   Globals::setFilePermissions(fn_, 0755);
 }
 
@@ -634,7 +632,7 @@ FormScriptGenerator::sl_genCreateSaveSettings()
 {
   SettingsHandlerCreate settings_;
   auto checkedItems_ = ui->treeWidget_CreateBackup->getCheckedItems();
-  if (!settings_.save(ui->comboBox_ScriptCreateName->currentText(),
+  if (!settings_.save(ui->comboBox_ScriptName_Create->currentText(),
                       checkedItems_)) {
     QMessageBox::critical(this, tr("Warning"), tr("Error writing file"));
     return;
@@ -646,7 +644,7 @@ FormScriptGenerator::sl_genCreateSaveSettings()
 void
 FormScriptGenerator::sl_genCreateBackup()
 {
-  if (ui->comboBox_ScriptCreateName->currentText().isEmpty()) {
+  if (ui->comboBox_ScriptName_Create->currentText().isEmpty()) {
     return;
   }
 
@@ -659,7 +657,7 @@ FormScriptGenerator::sl_genCreateBackup()
     QString("%0/%1_%2")
       .arg(prefs_.localScriptPath,
            "create",
-           ui->comboBox_ScriptCreateName->currentText()),
+           ui->comboBox_ScriptName_Create->currentText()),
     tr("Script (*.sh)"),
     "sh");
 
@@ -774,8 +772,8 @@ FormScriptGenerator::setupCharValidation()
 {
   static QRegularExpression regExp_(R"(^[a-z0-9_]+$)");
   auto* validator_ = new QRegularExpressionValidator(regExp_, this);
-  ui->comboBox_ScriptCreateName->setValidator(validator_);
-  ui->comboBox_CreateScriptName->setValidator(validator_);
+  ui->comboBox_ScriptName_Create->setValidator(validator_);
+  ui->comboBox_ScriptName_Create->setValidator(validator_);
 
   static QRegularExpression regExp1_(R"(^[A-Za-z0-9_/@:.-]+$)");
   ui->lineEdit_DestPath->setValidator(
@@ -799,21 +797,25 @@ FormScriptGenerator::setupTextBrowser()
 void
 FormScriptGenerator::setupButtons()
 {
+  // Refresh object contents when page is changed
   connect(ui->tabWidget_ScriptGen,
           &QTabWidget::currentChanged,
           this,
           [this](int index) {
             switch (index) {
-              case 0: {
+              case static_cast<int>(Pages::InitRepos): {
+                ui->comboBox_ScriptName_Init->refresh();
                 break;
               }
-              case 1: {
-                QPointer<comboBox_ScriptCreateName_P> cb_ =
-                  new comboBox_ScriptCreateName_P(this);
-                cb_->refresh();
+              case static_cast<int>(Pages::CreateRepos): {
+                ui->comboBox_ScriptName_Create->refresh();
                 break;
               }
-              case 2: {
+              case static_cast<int>(Pages::ExecScripts): {
+                ListviewExecScripts_P* refreshList =
+                  new ListviewExecScripts_P(this);
+                ui->listView_ExecScripts->refresh();
+                delete refreshList;
                 break;
               }
             }
@@ -840,11 +842,6 @@ FormScriptGenerator::setupButtons()
         ui->toolButton_DestPath->setEnabled(false);
       }
     });
-
-  connect(ui->toolButton_ScrOpen,
-          &QToolButton::clicked,
-          this,
-          [this](bool clicked) { ; });
 
   connect(ui->toolButton_ScrOpen,
           SIGNAL(clicked(bool)),
@@ -885,7 +882,7 @@ FormScriptGenerator::setupButtons()
           this,
           SLOT(sl_genCreateBackupReload()));
 
-  connect(ui->toolButton_ShowLog,
+  connect(ui->toolButton_ShowLogFiles,
           SIGNAL(clicked(bool)),
           this,
           SLOT(sl_dialogShowLogFile_triggered()));

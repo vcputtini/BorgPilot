@@ -144,6 +144,7 @@ public:
     : QComboBox(parent)
   {
     addItems(QStringList() << "none"
+                           << "authenticated"
                            << "repokey"
                            << "repokey-blake2");
   }
@@ -310,7 +311,6 @@ private:
     InitRepos = 0x00,
     CreateRepos = 0x01,
     ExecScripts = 0x02
-
   };
 
   enum class Columns
@@ -333,7 +333,6 @@ private:
     Init,
     Create
   };
-
   void scriptExecution(ExecTypes type);
 
   void setupInitRepoTable();

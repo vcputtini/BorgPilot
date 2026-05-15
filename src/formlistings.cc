@@ -394,6 +394,8 @@ FormListings::setupToolButtons()
       return;
     }
 
+    SettingsHandler settings_;
+    SettingsHandler::Preferences prefs_ = settings_.relodPreferences();
     QFileDialog dlg_;
     dlg_.setFileMode(QFileDialog::ExistingFiles);
     dlg_.setViewMode(QFileDialog::Detail);
@@ -401,7 +403,7 @@ FormListings::setupToolButtons()
     dlg_.setDirectory(QDir::homePath());
 
     const QString fn_ = dlg_.getSaveFileName(
-      this, tr("Save File As"), QDir::homePath(), tr("Listing (*.txt)"));
+      this, tr("Save File As"), prefs_.localDataPath, tr("Listing (*.txt)"));
     if (fn_.isEmpty()) {
       const int ret_ = QMessageBox::warning(this,
                                             ProgId::Name,

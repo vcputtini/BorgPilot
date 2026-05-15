@@ -116,6 +116,12 @@ GlobalOptions::initializeOptionalsMap()
                   QT_TR_NOOP("Output verbose list of items (files, "
                              "dirs, …). Note: Checked by default to allow "
                              "detailed viewing of processes.")) } },
+    { Optionals_e::Compression,
+      { qMakePair(
+        "--compression",
+        QT_TR_NOOP(
+          "Select compression algorithm, see the output of the “borg help "
+          "compression” command for details.")) } },
     { Optionals_e::Filter,
       { qMakePair("--filter",
                   QT_TR_NOOP("Only display items with the given "
@@ -259,13 +265,7 @@ GlobalOptions::initializeOptionalsMap()
         "--chunk-params",
         QT_TR_NOOP("Specify the chunker parameters (ALGO, CHUNK_MIN_EXP, "
                    "CHUNK_MAX_EXP, HASH_MASK_BITS, HASH_WINDOW_SIZE). default: "
-                   "buzhash,19,23,21,4095")) },
-    { Optionals_e::Compression,
-      { qMakePair(
-        "--compression",
-        QT_TR_NOOP(
-          "Select compression algorithm, see the output of the “borg help "
-          "compression” command for details.")) } }
+                   "buzhash,19,23,21,4095")) }
   };
 }
 
@@ -440,6 +440,11 @@ GlobalOptions::initializeAll()
       { qMakePair("--list",
                   QT_TR_NOOP("Output verbose list of items (files, "
                              "dirs, …)")) } },
+    { eGlobalOptions::Compression,
+      { qMakePair("--compression",
+                  QT_TR_NOOP("Default: lz4. Select compression algorithm, see "
+                             "the output of the “borg help "
+                             "compression” command for details.")) } },
     { eGlobalOptions::Filter,
       { qMakePair("--filter",
                   QT_TR_NOOP("Only display items with the given "
@@ -583,12 +588,7 @@ GlobalOptions::initializeAll()
         "--chunk-params",
         QT_TR_NOOP("Specify the chunker parameters (ALGO, CHUNK_MIN_EXP, "
                    "CHUNK_MAX_EXP, HASH_MASK_BITS, HASH_WINDOW_SIZE). default: "
-                   "buzhash,19,23,21,4095")) },
-    { eGlobalOptions::Compression,
-      { qMakePair(
-        "--compression",
-        QT_TR_NOOP(
-          "Select compression algorithm, see the output of the “borg help "
-          "compression” command for details.")) } }
+                   "buzhash,19,23,21,4095")) }
+
   }; // return
 }
