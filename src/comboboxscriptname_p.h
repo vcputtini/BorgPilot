@@ -46,9 +46,6 @@
 #include <QSettings>
 #include <QTimer>
 
-#define NOAUTOREFRESH
-
-#ifdef NOAUTOREFRESH
 class ComboBoxScriptName_P : public QComboBox
 {
   Q_OBJECT
@@ -59,27 +56,5 @@ public:
 private:
   void getScriptNames();
 };
-
-#else
-// AUTO REFRESH
-
-class ComboBoxScriptName_P : public QComboBox
-{
-  Q_OBJECT
-public:
-  explicit ComboBoxScriptName_P(QWidget* parent = nullptr);
-  ~ComboBoxScriptName_P() = default;
-
-private slots:
-  void refreshScriptNames();
-
-private:
-  void populateScriptNames();
-  QString getSettingsFilePath() const;
-
-  QFileSystemWatcher m_watcher;
-  QTimer m_timer;
-};
-#endif // AUTOREFRSH
 
 #endif // COMBOBOXSCRIPTNAME_P_H

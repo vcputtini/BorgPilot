@@ -42,7 +42,6 @@
 // #include <algorithm>
 // #include <ranges> // C++20 para views
 
-#ifdef NOAUTOREFRESH
 /*!
  * \brief ComboBoxScriptName_P::ComboBoxScriptName_P
  * \param parent
@@ -69,90 +68,3 @@ ComboBoxScriptName_P::getScriptNames()
     }
   }
 }
-
-#else
-
-// auto refresh
-ComboBoxScriptName_P::ComboBoxScriptName_P(QWidget* parent)
-  : QComboBox(parent)
-{
-  qDebug() << "USING AUTOREFRESH";
-
-  populateScriptNames();
-
-  // Watcher para mudanças no arquivo INI
-  connect(&m_watcher,
-          &QFileSystemWatcher::fileChanged,
-          this,
-          &ComboBoxScriptName_P::refreshScriptNames);
-
-  // Timer para polling a cada 5s (fallback se watcher falhar)
-  m_timer.setInterval(5000);
-  connect(&m_timer,
-          &QTimer::timeout,
-          this,
-          &ComboBoxScriptName_P::refreshScriptNames);
-  m_timer.start();
-
-  // Adiciona o path do settings ao watcher
-  QString settingsPath = getSettingsFilePath();
-  if (QFileInfo::exists(settingsPath)) {
-    m_watcher.addPath(settingsPath);
-  }
-}
-
-void
-ComboBoxScriptName_P::refreshScriptNames()
-{
-  QString settingsPath = getSettingsFilePath();
-  if (!QFileInfo::exists(settingsPath)) {
-    clear();
-    return;
-  }
-
-  const int actual_index_ = currentIndex();
-  // Re-adiciona se necessário (ex: renomeado)
-  if (!m_watcher.files().contains(settingsPath)) {
-    m_watcher.addPath(settingsPath);
-    // populateScriptNames();
-  }
-
-  populateScriptNames();
-  setCurrentIndex(actual_index_);
-}
-
-void
-ComboBoxScriptName_P::populateScriptNames()
-{
-  blockSignals(true);
-
-  clear(); // Clear list
-
-  const QSettings settings(ProgId::strOrganization(),
-                           ProgId::strInternalName());
-  QStringList groups = settings.childGroups();
-
-  // C++20: Filters using ranges (more efficient than manual loops)
-  auto scriptNames = groups | std::views::filter([](const QString& group) {
-                       return group.contains("INITREPO_");
-                     }) |
-                     std::views::transform([](const QString& group) {
-                       return group.section("INITREPO_", 1);
-                     });
-
-  for (const auto& name : scriptNames) {
-    addItem(name);
-  }
-  blockSignals(false);
-  update();
-}
-
-QString
-ComboBoxScriptName_P::getSettingsFilePath() const
-{
-  QSettings settings(ProgId::strOrganization(), ProgId::strInternalName());
-  qDebug() << settings.fileName();
-  return settings.fileName();
-}
-
-#endif //
