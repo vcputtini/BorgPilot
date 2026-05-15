@@ -39,6 +39,7 @@
 #include <QColor>
 #include <QProcess>
 #include <QStandardPaths>
+#include <qregularexpression.h>
 
 SystemRequirementsModel::SystemRequirementsModel(QObject* parent)
   : QAbstractTableModel(parent)
@@ -160,8 +161,27 @@ SystemRequirementsModel::resolveProgramInfo(const QString& progName) const
         output =
           QString::fromLocal8Bit(process.readAllStandardError()).trimmed();
       }
-      // Isolate only the first line of the return.
-      info.version = output.section(QLatin1Char('\n'), 0, 0);
+
+      /*!
+       * \note Returns the version number of the 'pass' command. This special
+       * logic is needed because 'pass --version' returns a long text.
+       */
+      if (output.startsWith("===")) {
+        // Regex cross-distro:
+        // (?:v)?      -> 'v' opcional (Non-capturing group)
+        // \d+\.\d+    -> Major.Minor obrigatórios
+        // (?:\.\d+)?  -> Patch opcional (ex: ausente em v2.0)
+        // (?:[\w.-]+)?-> Sufixos de distribuição opcionais (ex: -1.fc42, -rc1)
+        static const QRegularExpression re_(
+          R"((?:v)?\d+\.\d+(?:\.\d+)?(?:[\w.-]+)?)");
+        QRegularExpressionMatch match = re_.match(output);
+        if (match.hasMatch()) {
+          info.version = match.captured(0);
+        }
+      } else {
+        // Isolate only the first line of the return.
+        info.version = output.section(QLatin1Char('\n'), 0, 0);
+      }
     } else {
       process.kill();
       info.version = tr("Timeout/Unavailable");

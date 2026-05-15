@@ -76,7 +76,8 @@ void
 DialogFindReqExternalTools::sl_CheckSystemClicked()
 {
   const QStringList essenciais = { QStringLiteral("borg"),
-                                   QStringLiteral("git"),
+                                   QStringLiteral("pass"),
+                                   QStringLiteral("gpg2"),
                                    QStringLiteral("ssh"),
                                    QStringLiteral("rsync") };
 

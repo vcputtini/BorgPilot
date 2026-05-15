@@ -21,18 +21,30 @@ For repository initialization and backup functions, BorgPilot will generate a ba
 You can make changes to the generated script if necessary. For examples, see src/doc/scripts-sample.
 - Dashboard: The dashboard module centralizes telemetry and visualization of data from active repositories.
 
-
 ### Build Requirements
 - C++20 or later
 - Qt 6.11 or later
 
 ### Development Environment:
 Tested on:
+
 - Fedora 42 or later
 - clang 21.1.8
 - (GCC) 15.2.1
 - cmake version 3.31.x
 - QtCreator 19.0.x (clang-format Mozilla style)
+
+### Required external programs
+The programs listed below are mandatory for the correct functioning of BorgPilot.
+
+- borg
+- pass (the standard unix password manager)
+- gnupg2
+- ssh
+- git
+- rsync
+
+
 
 ### Documentation
 Run Doxygen in `src/` to generate HTML docs in `src/doc/html`.
