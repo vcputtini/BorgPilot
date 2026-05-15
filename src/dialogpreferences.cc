@@ -51,7 +51,13 @@ DialogPreferences::DialogPreferences(QWidget* parent)
   , m_mode_(DialogShowFilesModes::Modes::Indefined)
 {
   ui->setupUi(this);
+  connect(&m_settingsHandler,
+          SIGNAL(sig_status(QString)),
+          this,
+          SLOT(sl_settingsHandlerStatus(QString)));
+
   createToolBar();
+
   sl_reload();
 }
 
@@ -133,12 +139,11 @@ DialogPreferences::sl_save()
                    "data.\n\nDo you confirm?"))) {
     return;
   }
+
   SettingsHandler::Preferences prefs_;
-  prefs_.localScriptPath =
-    std::move(ui->lineEdit_LocalScriptPath->text().trimmed());
-  prefs_.localLogPath = std::move(ui->lineEdit_LocalLogPath->text().trimmed());
-  prefs_.localDataPath =
-    std::move(ui->lineEdit_LocalDataPath->text().trimmed());
+  prefs_.localScriptPath = ui->lineEdit_LocalScriptPath->text().trimmed();
+  prefs_.localLogPath = ui->lineEdit_LocalLogPath->text().trimmed();
+  prefs_.localDataPath = ui->lineEdit_LocalDataPath->text().trimmed();
   if (!m_settingsHandler.savePreferences(prefs_)) {
     message_(tr("Error trying to save preferences."));
     return;
@@ -153,10 +158,9 @@ void
 DialogPreferences::sl_reload()
 {
   SettingsHandler::Preferences prefs_ = m_settingsHandler.relodPreferences();
-  ui->lineEdit_LocalScriptPath->setText(
-    std::move(prefs_.localScriptPath.toUtf8()));
-  ui->lineEdit_LocalLogPath->setText(std::move(prefs_.localLogPath.toUtf8()));
-  ui->lineEdit_LocalDataPath->setText(std::move(prefs_.localDataPath.toUtf8()));
+  ui->lineEdit_LocalScriptPath->setText(prefs_.localScriptPath.toUtf8());
+  ui->lineEdit_LocalLogPath->setText(prefs_.localLogPath.toUtf8());
+  ui->lineEdit_LocalDataPath->setText(prefs_.localDataPath.toUtf8());
 }
 
 void

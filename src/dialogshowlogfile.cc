@@ -89,7 +89,7 @@ DialogShowLogFile::openLogFile()
   SettingsHandler settings_;
   SettingsHandler::Preferences prefs_ = settings_.relodPreferences();
 
-  QString fn_{};
+  QString fn_;
 
   switch (m_fileModes_) {
     case DialogShowFilesModes::Modes::Indefined: {
