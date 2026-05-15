@@ -49,16 +49,12 @@ public:
   explicit CreateDefaultBorgConfFile(QObject* parent = nullptr);
   ~CreateDefaultBorgConfFile() = default;
 
-#if 1
   /**
    * \brief Creates the default configuration file if it does not exist.
    * \return Returns 'true' if the file was created successfully or if it
    * already existed. Returns 'false' if there was a permission or I/O failure.
    */
   [[nodiscard]] bool create();
-#else
-  void create();
-#endif
 
 signals:
   void error(const QString& error);

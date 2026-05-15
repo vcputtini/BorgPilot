@@ -77,7 +77,8 @@ BashHighlighterLite::setTheme(Theme theme)
   if (m_currentTheme_ != theme) {
     m_currentTheme_ = theme;
     applyThemeColors();
-    rehighlight(); // Força a atualização de todo o documento com as novas cores
+    rehighlight(); // This forces the entire document to update with the new
+                   // colors.
   }
 }
 

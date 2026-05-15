@@ -189,11 +189,11 @@ constexpr const char* HELP_GEN_014 = QT_TR_NOOP(
   "when installing or upgrading machines / OS / borg.");
 constexpr const char* HELP_GEN_015 =
   QT_TR_NOOP("For “Warning: Attempting to access a previously unknown "
-             "unencrypted repository”");
+             "unencrypted repository.”");
 constexpr const char* HELP_GEN_016 = QT_TR_NOOP(
-  "For “Warning: The repository at location … was previously located at …”");
+  "For “Warning: The repository at location … was previously located at …”.");
 constexpr const char* HELP_GEN_017 = QT_TR_NOOP(
-  "For “This is a potentially dangerous function…” (check --repair)");
+  "For “This is a potentially dangerous function…” (check --repair).");
 constexpr const char* HELP_GEN_018 =
   QT_TR_NOOP("For “You requested to completely DELETE the repository including "
              "all archives it contains:”");

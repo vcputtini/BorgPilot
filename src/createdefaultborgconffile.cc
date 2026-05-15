@@ -50,7 +50,6 @@ CreateDefaultBorgConfFile::CreateDefaultBorgConfFile(QObject* parent)
 {
 }
 
-#if 1
 [[nodiscard]] bool
 CreateDefaultBorgConfFile::create()
 {
@@ -87,23 +86,3 @@ CreateDefaultBorgConfFile::create()
 
   return file.error() == QFile::NoError;
 }
-#else
-void
-CreateDefaultBorgConfFile::create()
-{
-  const QString filePath_ = QString("%0/.config/%1/qBorgPilot.conf")
-                              .arg(QDir::homePath(), ProgId::strOrganization());
-
-  const QFileInfo fileInfo_(filePath_);
-  if (!fileInfo_.exists()) {
-    QFile file_(filePath_);
-    if (file_.open(QIODevice::WriteOnly | QIODevice::Text)) {
-      QTextStream out_ts_(&file_);
-      out_ts_ << defaultBorgConfig;
-    }
-    file_.close();
-
-    return;
-  }
-}
-#endif
