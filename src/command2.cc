@@ -70,6 +70,7 @@ const std::map<Command::EncryptModes, std::string>
 Command::initializeEncryptMap()
 {
   return { { EncryptModes::None, "none" },
+           { EncryptModes::Authenticated, "authenticated" },
            { EncryptModes::Repokey_blake2, "repokey_blake2" },
            { EncryptModes::Keyfile, "keyfile" } };
 }

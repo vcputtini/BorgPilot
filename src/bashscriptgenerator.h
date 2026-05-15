@@ -51,6 +51,31 @@
 #include "command2.h"
 #include "types_global.h"
 
+/*! \note MENSAGEM DE COMMIT - APAGAR DEPOIS DE FAZER O COMMIT
+ * Adiciona suporte a variáveis ​​de ambiente gerais e atualiza os modos de
+ * criptografia
+ *
+ * Implementa a geração dinâmica de variáveis ​​de ambiente gerais e de
+ * resposta automática usando uma função lambda altamente otimizada com
+ *QStringBuilder. Atualiza os argumentos de inicialização do repositório para
+ * usar a flag explícita --encryption e introduz o modo de criptografia
+ * 'Authenticated'.
+ *
+ *- Adiciona a função lambda mountEnvVars, aproveitando QStringBuilder (%) e
+ *reserve() para concatenação de strings otimizada.
+ *
+ *- Inclui <QStringBuilder> e corrige a capitalização do cabeçalho
+ *<QStringLiteral>.
+ *
+ *- Introduz Command::EncryptModes::Authenticated como uma nova opção de
+ *inicialização.
+ *
+ *- Substitui a flag de inicialização legada '-e' pela flag explícita
+ *'--encryption='.
+ *
+ *- Traduz os caminhos de documentação codificados para inglês.
+ */
+
 class BashScriptGenerator : public QObject
 {
   Q_OBJECT

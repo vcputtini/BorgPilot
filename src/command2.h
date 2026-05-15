@@ -81,6 +81,7 @@ public:
   enum class EncryptModes
   {
     None = 0x00,
+    Authenticated,
     Repokey_blake2,
     Keyfile
   };

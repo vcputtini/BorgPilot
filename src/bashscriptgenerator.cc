@@ -36,7 +36,8 @@
 #include "bashscriptgenerator.h"
 
 #include <QSettings>
-#include <qstringliteral.h>
+#include <QStringBuilder>
+#include <QStringLiteral>
 
 #include <sstream>
 
@@ -149,6 +150,7 @@ BashScriptGenerator::writeScript() noexcept
   m_out_ts_ << bst_->getScriptTemplate(
     BashScriptTemplates::ScriptTpl::TPL_BASH_CHECK_COMMANDS);
 
+  // -------------------------------------------------------------------------
   AppTypes::NamedValueList vars_export_list_ = sHandler_.readDirAndFiles();
   QString exported_vars_ = QString(
     bst_->getScriptTemplate(BashScriptTemplates::ScriptTpl::TPL_BASH_BORG_ENV)
@@ -160,6 +162,31 @@ BashScriptGenerator::writeScript() noexcept
            vars_export_list_.at(5).second,
            vars_export_list_.at(6).second));
   m_out_ts_ << exported_vars_;
+
+  auto mountEnvVars = [this](AppTypes::NamedValueList vars_export_list_) {
+    ///< \note Uses QStringBuilder
+    QString result;
+    result.reserve(vars_export_list_.size() * 32);
+    for (const auto& [key, value] : std::as_const(vars_export_list_)) {
+      if (key.isEmpty()) {
+        continue;
+      }
+      if (!value.simplified().isEmpty()) {
+        result += u"    export " % key % u'=' % '"' % value % '"' % u'\n';
+      }
+    }
+    return result;
+  };
+
+  const QString result0_ = mountEnvVars(sHandler_.readGeneral());
+  const QString result1_ = mountEnvVars(sHandler_.readAutoAnswerers());
+  const QString stmt_ =
+    bst_
+      ->getScriptTemplate(
+        BashScriptTemplates::ScriptTpl::TPL_BASEH_BORG_GENERAL_ENV)
+      .arg(result0_ % '\n' % result1_);
+  m_out_ts_ << stmt_;
+  // -------------------------------------------------------------------------
 
   m_out_ts_ << bst_->getScriptTemplate(
     BashScriptTemplates::ScriptTpl::TPL_BASH_LOG);
@@ -205,7 +232,7 @@ BashScriptGenerator::setMainModel(MainModel model_)
  * \private
  * \brief BashScriptGenerator::commandForInitialization
  *
- * \note e.g.: borg --info --iec --show-rc  init -e none /dados/backup_teste/B01
+ * \note e.g.: borg --info --iec --show-rc  init -e none /data/backup_test/B01
  */
 void
 BashScriptGenerator::commandForInitialization() noexcept
@@ -225,7 +252,7 @@ BashScriptGenerator::commandForInitialization() noexcept
     }
     temp_ss_ << "borg ";
 
-    QString encmode_{};
+    QString encmode_;
     switch (std::move(std::get<2>(a_.value()))) {
       case 0: {
         encmode_ = std::move(
@@ -234,10 +261,15 @@ BashScriptGenerator::commandForInitialization() noexcept
       }
       case 1: {
         encmode_ = std::move(QString::fromStdString(
-          m_command_.get(Command::EncryptModes::Keyfile)));
+          m_command_.get(Command::EncryptModes::Authenticated)));
         break;
       }
       case 2: {
+        encmode_ = std::move(QString::fromStdString(
+          m_command_.get(Command::EncryptModes::Keyfile)));
+        break;
+      }
+      case 3: {
         encmode_ = std::move(QString::fromStdString(
           m_command_.get(Command::EncryptModes::Repokey_blake2)));
         break;
@@ -250,8 +282,8 @@ BashScriptGenerator::commandForInitialization() noexcept
       std::move(std::get<5>(a_.value()).simplified()); // quota; e.g.: 1T, 5G
 
     temp_ss_ << " " << m_commons_.toStdString() << " "
-             << m_command_.get(Command::Command_EC::Init) << " -e "
-             << encmode_.toStdString();
+             << m_command_.get(Command::Command_EC::Init)
+             << " --encryption=" << encmode_.toStdString();
 
     if (f3_) {
       temp_ss_ << " " << m_command_.get(Command::InitArguments::Append_only);
@@ -318,6 +350,8 @@ BashScriptGenerator::commandForBackup() noexcept
     }
 
     if (auto tmp_ = key_.split('#').at(0); tmp_.contains("@")) {
+      temp_ss_ << " " << "ssh://" + key_.split('#').at(0).toStdString() << " "
+               << key_.split('#').at(1).toStdString();
       temp_ss_ << " " << "ssh://" + key_.split('#').at(0).toStdString() << " "
                << key_.split('#').at(1).toStdString();
     } else {

@@ -67,6 +67,7 @@ TableWidget_RepoNamesItemDelegate::createEditor(
     case static_cast<int>(Columns::EncMode): {
       QComboBox* editor_ = new QComboBox(parent);
       editor_->addItems(QStringList() << "none"
+                                      << "authenticated"
                                       << "repokey"
                                       << "repokey-blake2");
       w_ = editor_;
