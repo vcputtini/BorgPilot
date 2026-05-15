@@ -60,6 +60,7 @@ public:
     TPL_BASH_PID_TREATMENT,
     TPL_BASH_CLEANUP,
     TPL_BASH_BORG_ENV,
+    TPL_BASEH_BORG_GENERAL_ENV,
     TPL_BASH_BORG_CREATE,
     TPL_BASH_BORG_INIT_REPO,
     TPL_BASH_MAIN,
@@ -236,7 +237,13 @@ __setup_borg_env() {
     export BORG_SECURITY_DIR=${__borg_security_dir}
     export TMPDIR=${__tmpdir}
 
-}
+)RAW";
+
+  static constexpr const char* bash_borg_general_env_ =
+    R"RAW(
+%0
+
+} # __setup_borg_env
 
 )RAW";
 
@@ -351,6 +358,7 @@ private:
     ScriptTpl::TPL_BASH_PID_TREATMENT,
     ScriptTpl::TPL_BASH_CLEANUP,
     ScriptTpl::TPL_BASH_BORG_ENV,
+    ScriptTpl::TPL_BASEH_BORG_GENERAL_ENV,
     ScriptTpl::TPL_BASH_BORG_CREATE,
     ScriptTpl::TPL_BASH_BORG_INIT_REPO,
     ScriptTpl::TPL_BASH_MAIN
@@ -370,6 +378,7 @@ private:
     { ScriptTpl::TPL_BASH_PID_TREATMENT, bash_pid_treatment_ },
     { ScriptTpl::TPL_BASH_CLEANUP, bash_cleanup_ },
     { ScriptTpl::TPL_BASH_BORG_ENV, bash_borg_env_ },
+    { ScriptTpl::TPL_BASEH_BORG_GENERAL_ENV, bash_borg_general_env_ },
     { ScriptTpl::TPL_BASH_BORG_CREATE, bash_borg_create_ },
     { ScriptTpl::TPL_BASH_BORG_INIT_REPO, bash_borg_init_repo_ },
     { ScriptTpl::TPL_BASH_MAIN, bash_main_ }
